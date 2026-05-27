@@ -427,3 +427,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Avoiding filtering my Supabase connection string
+appsettings.Development.json
