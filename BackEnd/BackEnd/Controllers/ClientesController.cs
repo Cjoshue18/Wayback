@@ -8,5 +8,10 @@ namespace BackEnd.Controllers
     public class ClientesController : ControllerBase
     {
 
+        [HttpGet]
+        public ActionResult GetClientes()
+        {
+            return Ok(new { message = "Lista" });
+        }
     }
 }
