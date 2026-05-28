@@ -430,3 +430,4 @@ FodyWeavers.xsd
 
 # Avoiding filtering my Supabase connection string correction
 BackEnd/BackEnd/appsettings.Development.json
+**/appsettings.Development.json
