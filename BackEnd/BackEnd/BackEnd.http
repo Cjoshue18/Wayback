@@ -5,22 +5,22 @@ Accept: application/json
 
 ###
 
-GET {{BackEnd_HostAddress}}/api/clientes/2
+GET {{BackEnd_HostAddress}}/api/clientes/3
 Accept: application/json
 
-###
+### 
 
 POST {{BackEnd_HostAddress}}/api/Clientes
 Content-Type: application/json
 {
-  "cliDocument": "00000000",
-  "cliDocumentType": "DNI",
-  "cliName": "Jorge",
-  "cliLastName": "Castillo",
-  "cliEmail": "Castillo@gmail.com",
-  "cliPhone": "999222333",
-  "cliUsername": "jorgeC",
-  "cliPasswordHash": "559330493039"
+  "cliDocument": "99911123",
+  "cliDocumentType": "Cedula",
+  "cliName": "Fabrizzio",
+  "cliLastName": "Peralta",
+  "cliEmail": "Perals@gmail.com",
+  "cliPhone": "987123123",
+  "cliUsername": "peraltita",
+  "cliPasswordHash": "contraseñadeprueba"
 }
 
 ###
@@ -56,3 +56,14 @@ Content-Type: application/json
 ###
 
 DELETE {{BackEnd_HostAddress}}/api/Clientes/4
+
+###
+
+POST {{BackEnd_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "cliUsername": "jvalverde",
+  "cliPasswordHash": "11112233223333"
+}
+
+###
