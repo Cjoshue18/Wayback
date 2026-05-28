@@ -4,3 +4,55 @@ GET {{BackEnd_HostAddress}}/api/Clientes
 Accept: application/json
 
 ###
+
+GET {{BackEnd_HostAddress}}/api/clientes/2
+Accept: application/json
+
+###
+
+POST {{BackEnd_HostAddress}}/api/Clientes
+Content-Type: application/json
+{
+  "cliDocument": "00000000",
+  "cliDocumentType": "DNI",
+  "cliName": "Jorge",
+  "cliLastName": "Castillo",
+  "cliEmail": "Castillo@gmail.com",
+  "cliPhone": "999222333",
+  "cliUsername": "jorgeC",
+  "cliPasswordHash": "559330493039"
+}
+
+###
+
+PUT {{BackEnd_HostAddress}}/api/clientes/3
+Content-Type: application/json
+{
+  "cliDocument": "00000001",
+  "cliDocumentType": "DNI",
+  "cliName": "Jorge",
+  "cliLastName": "Castillo",
+  "cliEmail": "Castillo@gmail.com",
+  "cliPhone": "999222333",
+  "cliUsername": "jorgeC",
+  "cliPasswordHash": "559330493039"
+}
+
+###
+
+POST {{BackEnd_HostAddress}}/api/Clientes
+Content-Type: application/json
+{
+  "cliDocument": "00004444",
+  "cliDocumentType": "DNI",
+  "cliName": "Julio",
+  "cliLastName": "Valverde",
+  "cliEmail": "Valverde@gmail.com",
+  "cliPhone": "912123123",
+  "cliUsername": "jvalverde",
+  "cliPasswordHash": "111122223333"
+}
+
+###
+
+DELETE {{BackEnd_HostAddress}}/api/Clientes/4

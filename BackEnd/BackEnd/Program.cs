@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
-//Add context
+//Añadiendo context
 builder.Services.AddDbContext<FashionShopContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 //-----------
