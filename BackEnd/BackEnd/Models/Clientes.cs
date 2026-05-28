@@ -2,16 +2,16 @@
 {
     public class Clientes
     {
-        public int Cli_ID { get; set; }
-        public string Cli_Document { get; set; } = string.Empty;
-        public string Cli_DocumentType { get; set; } = string.Empty;
-        public string Cli_Name { get; set; } = string.Empty;
-        public string Cli_LastName { get; set; } = string.Empty;
-        public string Cli_Email { get; set; } = string.Empty;
-        public string Cli_Phone { get; set; } = string.Empty;
-        public string Cli_Username { get; set; } = string.Empty;
-        public string Cli_PasswordHash { get; set; } = string.Empty;
-        public string Cli_Stripe_ID { get; set; } = string.Empty;
-        public DateTime Cli_RegisterDate { get; set; }
+        public int CliId { get; set; }
+        public string CliDocument { get; set; } = string.Empty;
+        public string CliDocumentType { get; set; } = string.Empty;
+        public string CliName { get; set; } = string.Empty;
+        public string CliLastName { get; set; } = string.Empty;
+        public string CliEmail { get; set; } = string.Empty;
+        public string? CliPhone { get; set; }
+        public string CliUsername { get; set; } = string.Empty;
+        public string CliPasswordHash { get; set; } = string.Empty;
+        public string? CliStripeId { get; set; }
+        public DateTime? CliRegisterDate { get; set; }
     }
 }

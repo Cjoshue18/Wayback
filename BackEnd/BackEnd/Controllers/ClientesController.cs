@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BackEnd.Data;
+using BackEnd.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;    
 
 namespace BackEnd.Controllers
 {
@@ -7,11 +10,17 @@ namespace BackEnd.Controllers
     [ApiController]
     public class ClientesController : ControllerBase
     {
+        private readonly FashionShopContext _context;
+        
+        public ClientesController(FashionShopContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult GetClientes()
+        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientes()
         {
-            return Ok(new { message = "Lista" });
+            return await _context.Clientes.ToListAsync();
         }
     }
 }
