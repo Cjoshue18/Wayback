@@ -11,6 +11,7 @@ namespace BackEnd.Data
         }
         public DbSet<Clientes> Clientes { get; set; }
 
+        //Fluent API 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Clientes>(entity=>
