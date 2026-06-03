@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Data
 {
-    public class FashionShopContext : DbContext
+    public class WaybackContext : DbContext
     {
-        public FashionShopContext(DbContextOptions<FashionShopContext> options) : base(options)
+        public WaybackContext(DbContextOptions<WaybackContext> options) : base(options)
         {
 
         }
@@ -37,19 +37,19 @@ namespace BackEnd.Data
                       .HasMaxLength(50)
                       .IsRequired();
 
-                entity.Property(e => e.UsuPasswordHash)
+                entity.Property(e => e.UsuContrasenaHash)
                       .HasColumnName("usu_password_hash")
                       .HasMaxLength(255)
                       .IsRequired();
 
-                entity.Property(e => e.UsuRole)
+                entity.Property(e => e.UsuRol)
                       .HasColumnName("usu_rol")
                       .HasMaxLength(20)
                       .IsRequired()
                       .HasDefaultValue("cliente");
 
                 // Columnas nullable
-                entity.Property(e => e.CliRegisterDate)
+                entity.Property(e => e.UsuFechaRegistro)
                       .HasColumnName("usu_fecha_registro")
                       .IsRequired(false)
                       .HasDefaultValueSql("now()");
@@ -79,28 +79,28 @@ namespace BackEnd.Data
                       .IsRequired(); // FK no nullable para garantizar la relación 1:1
 
                 // Columnas NOT NULL
-                entity.Property(e => e.CliDocument)
+                entity.Property(e => e.CliDocumento)
                       .HasColumnName("cli_documento")
                       .HasMaxLength(12)
                       .IsRequired();
 
-                entity.Property(e => e.CliDocumentType)
+                entity.Property(e => e.CliTipoDocumento)
                       .HasColumnName("cli_documento_tipo")
                       .HasMaxLength(20)
                       .IsRequired();
 
-                entity.Property(e => e.CliName)
+                entity.Property(e => e.CliNombre)
                       .HasColumnName("cli_nombre")
                       .HasMaxLength(50)
                       .IsRequired();
 
-                entity.Property(e => e.CliLastName)
+                entity.Property(e => e.CliApellido)
                       .HasColumnName("cli_apellido")
                       .HasMaxLength(50)
                       .IsRequired();
 
                 // Columnas nullable
-                entity.Property(e => e.CliPhone)
+                entity.Property(e => e.CliTelefono)
                       .HasColumnName("cli_telefono")
                       .HasMaxLength(15)
                       .IsRequired(false);
@@ -124,7 +124,7 @@ namespace BackEnd.Data
                       .IsUnique()
                       .HasDatabaseName("uq_cli_usu_id"); //Valida que sea relacion 1:1 por ser unique
 
-                entity.HasIndex(e => e.CliDocument)
+                entity.HasIndex(e => e.CliDocumento)
                       .IsUnique()
                       .HasDatabaseName("uq_cli_documento");
             });
@@ -141,7 +141,7 @@ namespace BackEnd.Data
                       .HasColumnName("usu_id")
                       .IsRequired(); // FK no nullable para garantizar la relación 1:1
                 
-                entity.Property(e => e.AdName)
+                entity.Property(e => e.AdNombre)
                       .HasColumnName("ad_nombre")
                       .HasMaxLength(100)
                       .IsRequired();

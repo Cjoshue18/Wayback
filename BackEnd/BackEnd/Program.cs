@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 });
 
 //Añadiendo context
-builder.Services.AddDbContext<FashionShopContext>(options =>
+builder.Services.AddDbContext<WaybackContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 //-----------
 

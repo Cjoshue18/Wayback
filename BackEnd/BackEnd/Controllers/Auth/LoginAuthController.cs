@@ -1,5 +1,5 @@
 ﻿using BackEnd.Data;
-using BackEnd.DTOs;
+using BackEnd.DTOs.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +9,13 @@ namespace BackEnd.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly FashionShopContext _context;
+        private readonly WaybackContext _context;
 
-        public AuthController(FashionShopContext context)
+        public AuthController(WaybackContext context)
         {
             _context = context;
         }
-
+        /*
         [HttpPost("login")] //añade una subruta url/api/login
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
@@ -46,6 +46,6 @@ namespace BackEnd.Controllers
                 token = "test"
             });
         }
-
+        */
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BackEnd.Data;
+using BackEnd.DTOs.Admin;
 using BackEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,24 +11,43 @@ namespace BackEnd.Controllers.Admin
     [ApiController]
     public class ClientesController : ControllerBase
     {
-        private readonly FashionShopContext _context;
+        private readonly WaybackContext _context;
         
-        public ClientesController(FashionShopContext context)
+        public ClientesController(WaybackContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientes()
+        public async Task<ActionResult<IEnumerable<AdminClientesDTO>>> GetClientes()
         {
             var clientes = await _context.Clientes
-                .Include(c => c.Usuario) //Incluye la información del usuario relacionado con cada cliente
-                .ToListAsync(); //obtiene la lista de clientes de la base de datos
-            return Ok(clientes); //Lista de todos los objetos Clientes
+                .Include(c => c.Usuario)
+                .ToListAsync(); //obtengo los datos en memoria de la base de datos
+
+            //Lo convierto en JSON usando usando las DTO para evitar referencia circular
+            var dto = clientes.Select(c => new AdminClientesDTO
+            {
+                CliId = c.CliId,
+                CliDocumento = c.CliDocumento,
+                CliTipoDocumento = c.CliTipoDocumento,
+                CliNombre = c.CliNombre,
+                CliApellido = c.CliApellido,
+                CliTelefono = c.CliTelefono,
+                Usuario = new AdminUsuariosDTO
+                {
+                    UsuId = c.Usuario.UsuId,
+                    UsuUsername = c.Usuario.UsuUsername,
+                    UsuEmail = c.Usuario.UsuEmail,
+                    UsuFechaRegistro = c.Usuario.UsuFechaRegistro
+                }
+            }).ToList(); //lo convierto en lista al ser muchos registros
+
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Clientes>> GetClienteByID(int id)
+        public async Task<ActionResult<AdminClientesDTO>> GetClienteByID(int id)
         {
             var cliente = await _context.Clientes
                 .Include(c => c.Usuario) //Incluye la información del usuario relacionado con cada cliente
@@ -36,11 +56,27 @@ namespace BackEnd.Controllers.Admin
             {
                 return NotFound(); //si no lo encuentra devuelve no encontrado
             }
-            return Ok(cliente); //Si lo encuentra devuelve el Cliente
+            var dto = new AdminClientesDTO //si lo encuentro, asigna los datos en el dto
+            {
+                CliId = cliente.CliId,
+                CliDocumento = cliente.CliDocumento,
+                CliTipoDocumento = cliente.CliTipoDocumento,
+                CliNombre = cliente.CliNombre,
+                CliApellido = cliente.CliApellido,
+                CliTelefono = cliente.CliTelefono,
+                Usuario = new AdminUsuariosDTO
+                {
+                    UsuId = cliente.Usuario.UsuId,
+                    UsuUsername = cliente.Usuario.UsuUsername,
+                    UsuEmail = cliente.Usuario.UsuEmail,
+                    UsuFechaRegistro = cliente.Usuario.UsuFechaRegistro
+                }
+            };
+            return Ok(dto); //Si lo encuentra devuelve el Cliente
         }
-
+        /*
         [HttpPost]
-        public async Task<ActionResult<Clientes>> AddCliente([FromBody] Clientes nuevoCliente)
+        public async Task<ActionResult<AdminClientesDTO>> AddCliente([FromBody] Clientes nuevoCliente)
         {
             if(nuevoCliente == null || nuevoCliente.Usuario == null)
             {
@@ -98,5 +134,6 @@ namespace BackEnd.Controllers.Admin
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        */
     }
 }
