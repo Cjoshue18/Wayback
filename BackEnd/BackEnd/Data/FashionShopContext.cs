@@ -20,7 +20,7 @@ namespace BackEnd.Data
             modelBuilder.Entity<Usuarios>(entity =>
             {
                 // Tabla y PK
-                entity.ToTable("Usuarios");
+                entity.ToTable("usuarios");
                 entity.HasKey(e => e.UsuId);
                 entity.Property(e => e.UsuId)
                       .HasColumnName("usu_id")
@@ -68,7 +68,7 @@ namespace BackEnd.Data
             modelBuilder.Entity<Clientes>(entity=>
             {
                 // Tabla y PK
-                entity.ToTable("Clientes");
+                entity.ToTable("clientes");
                 entity.HasKey(e => e.CliId);
                 entity.Property(e => e.CliId)
                       .HasColumnName("cli_id")
@@ -131,7 +131,7 @@ namespace BackEnd.Data
 
             modelBuilder.Entity<Administradores>(entity =>
             {
-                entity.ToTable("Administradores");
+                entity.ToTable("administradores");
                 entity.HasKey(e => e.AdId);
                 entity.Property(e => e.AdId)
                       .HasColumnName("ad_id")

@@ -1,6 +1,6 @@
 @BackEnd_HostAddress = http://localhost:5089
 
-GET {{BackEnd_HostAddress}}/api/admin/adminclientes
+GET {{BackEnd_HostAddress}}/api/admin/clientes
 Accept: application/json
 
 ###
