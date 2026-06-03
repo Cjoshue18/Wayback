@@ -2,11 +2,11 @@
 using BackEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;    
+using Microsoft.EntityFrameworkCore;
 
-namespace BackEnd.Controllers
+namespace BackEnd.Controllers.Admin
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/[controller]")]
     [ApiController]
     public class ClientesController : ControllerBase
     {
@@ -20,13 +20,18 @@ namespace BackEnd.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Clientes>>> GetClientes()
         {
-            return Ok(await _context.Clientes.ToListAsync()); //Lista de todos los objetos Clientes
+            var clientes = await _context.Clientes
+                .Include(c => c.Usuario) //Incluye la información del usuario relacionado con cada cliente
+                .ToListAsync(); //obtiene la lista de clientes de la base de datos
+            return Ok(clientes); //Lista de todos los objetos Clientes
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Clientes>> GetClienteByID(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id); //busca y lo asigna a la variable
+            var cliente = await _context.Clientes
+                .Include(c => c.Usuario) //Incluye la información del usuario relacionado con cada cliente
+                .FirstOrDefaultAsync(c => c.CliId == id); //busca y lo asigna a la variable
             if (cliente == null)
             {
                 return NotFound(); //si no lo encuentra devuelve no encontrado
@@ -37,7 +42,7 @@ namespace BackEnd.Controllers
         [HttpPost]
         public async Task<ActionResult<Clientes>> AddCliente([FromBody] Clientes nuevoCliente)
         {
-            if(nuevoCliente == null)
+            if(nuevoCliente == null || nuevoCliente.Usuario == null)
             {
                 return BadRequest();
             }
@@ -50,7 +55,9 @@ namespace BackEnd.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCliente(int id, [FromBody] Clientes upCliente)
         {
-            var cliente = await _context.Clientes.FindAsync(id); //encontrar por Id
+            var cliente = await _context.Clientes
+                .Include(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CliId == id); //encontrar por Id
             if(cliente == null)
             {
                 return NotFound();
@@ -59,12 +66,15 @@ namespace BackEnd.Controllers
             cliente.CliDocumentType = upCliente.CliDocumentType;
             cliente.CliName = upCliente.CliName;
             cliente.CliLastName = upCliente.CliLastName;
-            cliente.CliEmail = upCliente.CliEmail;
             cliente.CliPhone = upCliente.CliPhone;
-            cliente.CliUsername = upCliente.CliUsername;
-            cliente.CliPasswordHash = upCliente.CliPasswordHash;
-            cliente.CliStripeId = upCliente.CliStripeId;
-            cliente.CliRegisterDate = upCliente.CliRegisterDate;
+            cliente.CliPasarelaId = upCliente.CliPasarelaId;
+            
+            //Si tambien buscamos cambiar sus datos en la tabla Usuarios:
+            if(cliente.Usuario != null && upCliente.Usuario != null)
+            {
+                cliente.Usuario.UsuEmail = upCliente.Usuario.UsuEmail;
+                cliente.Usuario.UsuUsername = upCliente.Usuario.UsuUsername;
+            }
             await _context.SaveChangesAsync(); //guardar los cambios
             return NoContent(); //no retorna contenido
         }
@@ -72,10 +82,17 @@ namespace BackEnd.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes
+                .Include(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CliId == id);
             if(cliente == null)
             {
                 return NotFound();
+            }
+            //Si eliminamos el cliente se elimina su usuario:
+            if (cliente.Usuario != null)
+            {
+                _context.Usuarios.Remove(cliente.Usuario);
             }
             _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();

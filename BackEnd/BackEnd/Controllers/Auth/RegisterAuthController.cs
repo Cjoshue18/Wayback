@@ -19,20 +19,21 @@ namespace BackEnd.Controllers
         [HttpPost("login")] //añade una subruta url/api/login
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
-            if(string.IsNullOrEmpty(loginDto.CliUsername) || string.IsNullOrEmpty(loginDto.CliPasswordHash))
+            if(string.IsNullOrEmpty(loginDto.UsuUsername) || string.IsNullOrEmpty(loginDto.UsuPasswordHash))
             {
                 return BadRequest("Ingrese Usuario y Contraseña.");
             }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(c => c.CliUsername == loginDto.CliUsername);
+            var cliente = await _context.Usuarios
+                .Include(u => u.Cliente) // Incluye la entidad relacionada Cliente
+                .FirstOrDefaultAsync(c => c.UsuUsername == loginDto.UsuUsername);
 
             if(cliente == null)
             {
                 return Unauthorized("Usuario o contraseña incorrectos.");
             }
 
-            if(cliente.CliPasswordHash != loginDto.CliPasswordHash)
+            if(cliente.UsuPasswordHash != loginDto.UsuPasswordHash)
             {
                 return Unauthorized("Usuario o contraseña incorrectos.");
             }
@@ -40,8 +41,8 @@ namespace BackEnd.Controllers
             return Ok(new
             {
                 message = "¡Login exitoso",
-                usuario = cliente.CliUsername,
-                nombre = cliente.CliName,
+                usuario = cliente.UsuUsername,
+                nombre = cliente.Cliente!.CliName,
                 token = "test"
             });
         }
