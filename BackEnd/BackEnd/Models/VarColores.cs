@@ -8,6 +8,6 @@
         public string ColorUrlImagen {  get; set; } = string.Empty;
 
         //Navigation Properties
-        public Variantes Variante { get; set; } = null!;
+        public ICollection<Variantes> Variantes { get; set; } = new List<Variantes>();
     }
 }

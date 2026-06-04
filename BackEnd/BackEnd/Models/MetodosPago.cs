@@ -13,5 +13,6 @@ namespace BackEnd.Models
 
         //Navigation Properties
         public Clientes Cliente { get; set; } = null!; //pertenece a un cliente
+        public ICollection<Pedidos>? Pedidos { get; set; } = new List<Pedidos>(); //Un metodo de pago puede o no estar en varios pedidos
     }
 }

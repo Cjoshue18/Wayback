@@ -11,8 +11,12 @@
 
         //Navigation Properties
         public Productos Producto { get; set; } = null!; //Pertenece a un producto
-        public ICollection<VarColores> VarColores { get; set; } = new List<VarColores>();
-        //Una variante puede tener muchos colores variantes
+        public VarColores VarColor { get; set; } = null!; //Una variante tiene un color asignado
+        //Una variante "P1" tiene tallas en S M y L, entonces son 3 variantes,
+        //pero cada variante tiene SOLO un color asignado a esta.
+        //Por lo tanto, la relacion es Variantes N:1 VarColores.    
+        //Una variante SOLO tiene 1 color, pero un color puede pertenecer a varias variantes
+        //(P1-S, P1-M, P1-L pueden ser del mismo color)
         public ICollection<PedidoDetalles> Detalles { get; set; } = new List<PedidoDetalles>();
         //Una variante puede estar en multiples pedidos
     }

@@ -6,7 +6,7 @@
         public string CatNombre { get; set; } = string.Empty;
 
         //Navigation Properties
-        public ICollection<Productos> Producto { get; set; } = new List<Productos>();
+        public ICollection<Productos> Productos { get; set; } = new List<Productos>();
         //Una categoria tiene muchos productos
     }
 }
