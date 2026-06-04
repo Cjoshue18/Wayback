@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace BackEnd.Models
+﻿namespace BackEnd.Models
 {
     public class MetodosPago
     {

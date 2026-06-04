@@ -249,10 +249,10 @@ namespace BackEnd.Data
                       .HasColumnName("pro_descuento");
 
                 entity.Property(e => e.ProDescuentoInicio)
-                      .HasColumnName("pro_descuento_inicio");
+                      .HasColumnName("pro_desc_fecha_inicio");
 
                 entity.Property(e => e.ProDescuentoFin)
-                      .HasColumnName("pro_descuento_fin");
+                      .HasColumnName("pro_desc_fecha_fin");
 
                 entity.Property(e => e.ProFechaCreacion)
                       .HasColumnName("pro_fecha_creacion")
