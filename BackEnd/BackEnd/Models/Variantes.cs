@@ -7,7 +7,7 @@
         public int ColorId { get; set; }
         public string VarTalla { get; set; } = "S";
         public int VarStock { get; set; } = 0;
-        public decimal VarPrecio { get; set; }
+        public int? ImgId { get; set; }
 
         //Navigation Properties
         public Productos Producto { get; set; } = null!; //Pertenece a un producto
@@ -19,5 +19,7 @@
         //(P1-S, P1-M, P1-L pueden ser del mismo color)
         public ICollection<PedidoDetalles> Detalles { get; set; } = new List<PedidoDetalles>();
         //Una variante puede estar en multiples pedidos
+
+        public Imagenes? Imagen { get; set; } //Una variante tiene o no una imagen asignada
     }
 }

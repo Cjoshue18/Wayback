@@ -5,9 +5,10 @@
         public int ProId { get; set; }
         public int CatId { get; set; }
         public int? EstId { get; set; }
-        public string ProSexo { get; set; } = "UniSex";
+        public string ProGenero { get; set; } = "UniSex";
         public string ProNombre { get; set; } = string.Empty;
         public string? ProDescripcion {  get; set; }
+        public decimal ProPrecio { get; set; }
         public short? ProDescuento { get; set; }
         public DateTime? ProDescuentoInicio { get; set; }
         public DateTime? ProDescuentoFin {  get; set; }
@@ -17,6 +18,8 @@
         public Categorias Categoria { get; set; } = null!; //Un producto pertenece a una categoria
         public Estilos? Estilo { get; set; } //Un producto puede pertenecer a un estilo
         public ICollection<Variantes> Variantes { get; set; } = new List<Variantes>();
-        
+        public ICollection<Imagenes> Imagenes { get; set; } = new List<Imagenes>(); 
+        //Un producto puede tener varias imagenes
+
     }
 }

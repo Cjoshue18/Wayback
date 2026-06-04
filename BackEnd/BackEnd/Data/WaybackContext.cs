@@ -214,8 +214,8 @@ namespace BackEnd.Data
                 entity.Property(e => e.EstId)
                       .HasColumnName("est_id"); //FK puede ser null
 
-                entity.Property(e => e.ProSexo)
-                      .HasColumnName("pro_sexo")
+                entity.Property(e => e.ProGenero)
+                      .HasColumnName("pro_genero")
                       .HasMaxLength(10)
                       .IsRequired()
                       .HasDefaultValue("Unisex");
@@ -228,6 +228,11 @@ namespace BackEnd.Data
                 entity.Property(e => e.ProDescripcion)
                       .HasColumnName("pro_descripcion")
                       .HasMaxLength(500);
+
+                entity.Property(e => e.ProPrecio)
+                      .HasColumnName("pro_precio")
+                      .HasColumnType("decimal(10,2)")
+                      .IsRequired();
 
                 entity.Property(e => e.ProDescuento)
                       .HasColumnName("pro_descuento");
@@ -274,11 +279,6 @@ namespace BackEnd.Data
                       .HasColumnName("color_hex")
                       .HasMaxLength(7) //Formato #RRGGBB
                       .IsRequired();
-                
-                entity.Property(e => e.ColorUrlImagen)
-                      .HasColumnName("color_url_imagen")
-                      .HasMaxLength(255)
-                      .IsRequired();
             });
 
             modelBuilder.Entity<Variantes>(entity =>
@@ -309,11 +309,9 @@ namespace BackEnd.Data
                       .IsRequired()
                       .HasDefaultValue(0);
 
-                entity.Property(e => e.VarPrecio)
-                      .HasColumnName("var_precio")
-                      .HasColumnType("decimal(10,2)")
-                      .IsRequired();
-                
+                entity.Property(e => e.ImgId)
+                      .HasColumnName("img_id"); //FK puede ser null
+
                 //Constraints
                 entity.HasOne(v => v.Producto) //una variante pertenece a un producto
                       .WithMany(p => p.Variantes) //un producto tiene muchas variantes
@@ -326,6 +324,12 @@ namespace BackEnd.Data
                         .HasForeignKey(v => v.ColorId)
                         .OnDelete(DeleteBehavior.Restrict) //si intento borrar color no dejara si tiene variantes asignadas
                         .HasConstraintName("fk_var_color_id");
+
+                entity.HasOne(v => v.Imagen) //una variante tiene una imagen
+                      .WithMany(i => i.Variantes) //una imagen puede estar en muchas variantes 
+                      .HasForeignKey(v => v.ImgId)
+                      .OnDelete(DeleteBehavior.SetNull) //si borro imagen, en variante se vera null, pero no se borra variante
+                      .HasConstraintName("fk_var_img_id");
             });
 
             modelBuilder.Entity<Direcciones>(entity =>
@@ -518,6 +522,32 @@ namespace BackEnd.Data
                         .HasForeignKey(d => d.VarId)
                         .OnDelete(DeleteBehavior.Restrict) //no permite borrar variante si tiene detalles asociados, para mantener integridad historica de pedidos
                         .HasConstraintName("fk_detped_var_id");
+            });
+
+            modelBuilder.Entity<Imagenes>(entity =>
+            {
+                entity.ToTable("imagenes");
+                entity.HasKey(e => e.ImgId)
+                      .HasName("pk_img_id");
+                entity.Property(e => e.ImgId)
+                      .HasColumnName("img_id")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ProId)
+                      .HasColumnName("pro_id")
+                      .IsRequired(); // FK no nullable
+
+                entity.Property(e => e.ImgURL)
+                      .HasColumnName("img_url")
+                      .HasMaxLength(255)
+                      .IsRequired();
+
+                //Constraints
+                entity.HasOne(i => i.Producto) //una imagen pertenece a un producto
+                      .WithMany(p => p.Imagenes) //un producto puede tener muchas imagenes
+                      .HasForeignKey(i => i.ProId)
+                      .OnDelete(DeleteBehavior.Cascade) //si borro producto se borran sus imagenes
+                      .HasConstraintName("fk_img_pro_id");
             });
         }
     }
