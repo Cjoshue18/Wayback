@@ -12,6 +12,17 @@ namespace BackEnd.Data
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Administradores> Administradores { get; set; }
+        public DbSet<Categorias> Categorias { get; set; }
+        public DbSet<Estilos> Estilos { get; set; }
+        public DbSet<Productos> Productos { get; set; }
+        public DbSet<VarColores> VarColores { get; set; }
+        public DbSet<Variantes> Variantes { get; set; }
+        public DbSet<Direcciones> Direcciones { get; set; }
+        public DbSet<MetodosPago> MetodosPago { get; set; }
+        public DbSet<Pedidos> Pedidos { get; set; }
+        public DbSet<PedidoDetalles> PedidoDetalles { get; set; }
+        public DbSet<Imagenes> Imagenes { get; set; }
+
 
         //Fluent API 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
