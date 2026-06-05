@@ -9,3 +9,12 @@ GET {{BackEnd_HostAddress}}/api/admin/clientes/1
 Accept: application/json
 
 ### 
+
+GET {{BackEnd_HostAddress}}/api/general/categorias
+Accept: application/json
+
+###
+GET {{BackEnd_HostAddress}}/api/general/estilos
+Accept: application/json
+
+###
