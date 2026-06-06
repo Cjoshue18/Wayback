@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Controllers.Admin
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/admin/reportes/clientes")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class AdminClientesController : ControllerBase
     {
         private readonly WaybackContext _context;
         
-        public ClientesController(WaybackContext context)
+        public AdminClientesController(WaybackContext context)
         {
             _context = context;
         }

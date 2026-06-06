@@ -1,11 +1,11 @@
 @BackEnd_HostAddress = http://localhost:5089
 
-GET {{BackEnd_HostAddress}}/api/admin/clientes
+GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes
 Accept: application/json
 
 ###
 
-GET {{BackEnd_HostAddress}}/api/admin/clientes/1
+GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes/1
 Accept: application/json
 
 ### 
@@ -27,3 +27,21 @@ GET {{BackEnd_HostAddress}}/api/estilos/1
 Accept: application/json
 
 ###
+POST {{BackEnd_HostAddress}}/api/auth/register-cliente
+Content-Type: application/json
+{
+  "Email": "emaildeprueba@gmail.com",
+  "NombreUsuario": "Prueba123",
+  "Contrasena": "contrasenaDePrueba",
+  "Nombres": "John John",
+  "Apellidos": "Doe Doe",
+  "TipoDocumento": "DNI",
+  "Documento": "11111111"
+}
+###
+POST {{BackEnd_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "UsuUsernameOrEmail": "emaildeprueba@gmail.com",
+  "UsuContrasena": "contrasenaDePrueba"
+}

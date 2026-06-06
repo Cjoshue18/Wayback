@@ -1,8 +1,14 @@
-﻿namespace BackEnd.DTOs.Auth
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BackEnd.DTOs.Auth
 {
     public class LoginDTO
     {
-        public string UsuUsername { get; set; } = string.Empty;
-        public string UsuContrasenaHash { get; set; } = string.Empty;
+        [Required (ErrorMessage = "Campo Obligatorio.")]
+        [EmailAddress(ErrorMessage = "Escribir un correo electrónico válido.")]
+        public string UsuUsernameOrEmail { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Campo Obligatorio.")]
+        public string UsuContrasena { get; set; } = string.Empty;
     }
 }
