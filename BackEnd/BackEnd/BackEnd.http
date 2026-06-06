@@ -10,11 +10,20 @@ Accept: application/json
 
 ### 
 
-GET {{BackEnd_HostAddress}}/api/general/categorias
+GET {{BackEnd_HostAddress}}/api/categorias
 Accept: application/json
 
 ###
-GET {{BackEnd_HostAddress}}/api/general/estilos
+GET {{BackEnd_HostAddress}}/api/estilos
+Accept: application/json
+
+###
+
+GET {{BackEnd_HostAddress}}/api/categorias/1
+Accept: application/json
+
+###
+GET {{BackEnd_HostAddress}}/api/estilos/1
 Accept: application/json
 
 ###

@@ -1,7 +1,5 @@
 ﻿using BackEnd.Data;
 using BackEnd.DTOs.Admin;
-using BackEnd.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +22,11 @@ namespace BackEnd.Controllers.Admin
             var clientes = await _context.Clientes
                 .Include(c => c.Usuario)
                 .ToListAsync(); //obtengo los datos en memoria de la base de datos
+
+            if(!clientes.Any())
+            {
+                return Ok(new List<AdminClientesDTO>());
+            }
 
             //Lo convierto en JSON usando usando las DTO para evitar referencia circular
             var dto = clientes.Select(c => new AdminClientesDTO

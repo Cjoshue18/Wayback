@@ -2,12 +2,8 @@
 {
     public class CategoriasDTO
     {
+        public int CatID { get; set; }
         public string CatNombre { get; set; } = null!;
 
-    }
-
-    public class EstilosDTO 
-    {
-        public string EstNombre { get; set; } = null!;
     }
 }
