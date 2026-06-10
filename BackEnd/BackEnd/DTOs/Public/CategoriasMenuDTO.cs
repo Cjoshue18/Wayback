@@ -1,6 +1,6 @@
 ﻿namespace BackEnd.DTOs.Public
 {
-    public class CategoriasDTO
+    public class CategoriasMenuDTO
     {
         public int CatID { get; set; }
         public string CatNombre { get; set; } = null!;

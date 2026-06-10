@@ -17,7 +17,7 @@ namespace BackEnd.Controllers.Public
         }
 
         [HttpGet("categorias")]
-        public async Task<ActionResult<IEnumerable<CategoriasDTO>>> GetCategorias()
+        public async Task<ActionResult<IEnumerable<CategoriasMenuDTO>>> GetCategorias()
         {
             var categorias = await _context.Categorias
                 .OrderBy(c => c.CatNombre)
@@ -25,11 +25,11 @@ namespace BackEnd.Controllers.Public
 
             if (!categorias.Any())
             {
-                return Ok(new List<CategoriasDTO>()); //regresa una lista vacia
+                return Ok(new List<CategoriasMenuDTO>()); //regresa una lista vacia
                 //para que sea controlado por el frontend con "No hay categorias disponibles" o similar
             }
 
-            var dto = categorias.Select(c => new CategoriasDTO
+            var dto = categorias.Select(c => new CategoriasMenuDTO
             {
                 CatID = c.CatId,
                 CatNombre = c.CatNombre
@@ -39,7 +39,7 @@ namespace BackEnd.Controllers.Public
         }
 
         [HttpGet("categorias/{id:int}")]
-        public async Task<ActionResult<CategoriasDTO>> GetCategoriaByID(int id)
+        public async Task<ActionResult<CategoriasMenuDTO>> GetCategoriaByID(int id)
         {
             var categoria = await _context.Categorias
                 .FirstOrDefaultAsync(c => c.CatId == id);
@@ -47,7 +47,7 @@ namespace BackEnd.Controllers.Public
             {
                 return NotFound();
             }
-            var dto = new CategoriasDTO
+            var dto = new CategoriasMenuDTO
             {
                 CatID = categoria.CatId,
                 CatNombre = categoria.CatNombre
@@ -56,7 +56,7 @@ namespace BackEnd.Controllers.Public
         }
 
         [HttpGet("estilos")]
-        public async Task<ActionResult<IEnumerable<EstilosDTO>>> GetEstilos()
+        public async Task<ActionResult<IEnumerable<EstilosMenuDTO>>> GetEstilos()
         {
             var estilos = await _context.Estilos
                 .OrderBy(e => e.EstNombre)
@@ -64,10 +64,10 @@ namespace BackEnd.Controllers.Public
 
             if (!estilos.Any())
             {
-                return Ok(new List<EstilosDTO>());
+                return Ok(new List<EstilosMenuDTO>());
             }
 
-            var dto = estilos.Select(e => new EstilosDTO
+            var dto = estilos.Select(e => new EstilosMenuDTO
             {
                 EstId = e.EstId,
                 EstNombre = e.EstNombre
@@ -76,7 +76,7 @@ namespace BackEnd.Controllers.Public
             return Ok(dto);
         }
         [HttpGet("estilos/{id:int}")]
-        public async Task<ActionResult<EstilosDTO>> GetEstiloByID(int id)
+        public async Task<ActionResult<EstilosMenuDTO>> GetEstiloByID(int id)
         {
             var estilo = await _context.Estilos
                 .FirstOrDefaultAsync(e => e.EstId == id);
@@ -84,7 +84,7 @@ namespace BackEnd.Controllers.Public
             {
                 return NotFound();
             }
-            var dto = new EstilosDTO
+            var dto = new EstilosMenuDTO
             {
                 EstId = estilo.EstId,
                 EstNombre = estilo.EstNombre
