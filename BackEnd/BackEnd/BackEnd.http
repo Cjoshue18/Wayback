@@ -2,7 +2,7 @@
 
 GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes
 Accept: application/json
-
+Authorization: Bearer 
 ###
 
 GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes/1
@@ -45,3 +45,14 @@ Content-Type: application/json
   "UsuUsernameOrEmail": "emaildeprueba@gmail.com",
   "UsuContrasena": "contrasenaDePrueba"
 }
+
+###
+
+POST {{BackEnd_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "UsuUsernameOrEmail": "emaildeprueba@gmail.com",
+  "UsuContrasena": "contrasenaDePrueba"
+}
+
+###

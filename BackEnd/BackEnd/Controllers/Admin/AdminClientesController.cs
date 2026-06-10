@@ -1,5 +1,6 @@
 ﻿using BackEnd.Data;
 using BackEnd.DTOs.Admin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace BackEnd.Controllers.Admin
         {
             _context = context;
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdminClientesDTO>>> GetClientes()
         {
@@ -49,6 +50,7 @@ namespace BackEnd.Controllers.Admin
             return Ok(dto);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<AdminClientesDTO>> GetClienteByID(int id)
         {
