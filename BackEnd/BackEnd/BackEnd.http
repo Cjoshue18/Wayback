@@ -1,12 +1,15 @@
 @BackEnd_HostAddress = http://localhost:5089
+@BackEnd_Https = https://localhost:7065
+@mitoken = ""
 
-GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes
+GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
-Authorization: Bearer 
+Authorization: Bearer {{mitoken}}
 ###
 
-GET {{BackEnd_HostAddress}}/api/admin/reportes/clientes/1
+GET {{BackEnd_Https}}/api/admin/reportes/clientes/3
 Accept: application/json
+Authorization: Bearer {{mitoken}}
 
 ### 
 
@@ -48,11 +51,21 @@ Content-Type: application/json
 
 ###
 
+POST {{BackEnd_HostAddress}}/api/auth/register/secure/admin
+Content-Type: application/json
+{
+  "Email": "adminprueba@gmail.com",
+  "NombreUsuario": "admin123",
+  "Contrasena": "admin123",
+  "NombreAdmin": "Juanito"
+}
+###
+
 POST {{BackEnd_HostAddress}}/api/auth/login
 Content-Type: application/json
 {
-  "UsuUsernameOrEmail": "emaildeprueba@gmail.com",
-  "UsuContrasena": "contrasenaDePrueba"
+  "UsuUsernameOrEmail": "adminprueba@gmail.com",
+  "UsuContrasena": "admin123"
 }
 
 ###

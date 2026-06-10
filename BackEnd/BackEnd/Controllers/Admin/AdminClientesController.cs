@@ -16,6 +16,7 @@ namespace BackEnd.Controllers.Admin
         {
             _context = context;
         }
+
         [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdminClientesDTO>>> GetClientes()

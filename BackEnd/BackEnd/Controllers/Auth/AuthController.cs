@@ -2,6 +2,7 @@
 using BackEnd.DTOs.Auth;
 using BackEnd.Models;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -113,6 +114,58 @@ namespace BackEnd.Controllers
                 usuario = usuario.UsuUsername,
                 Rol = usuario.UsuRol
             });
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("register/secure/admin")]
+        public async Task<ActionResult> RegisterAdmin([FromBody] AdminRegisterDTO nuevoAdmin)
+        {
+            var emailExiste = await _context.Usuarios
+                .AnyAsync(u => u.UsuEmail == nuevoAdmin.Email); //ver si el email ya existe en
+            //la base de datos
+            if (emailExiste)
+            {
+                return Conflict("Este email ya está registrado."); //Error 409
+            }
+
+            var usuarioExiste = await _context.Usuarios
+                .AnyAsync(u => u.UsuUsername == nuevoAdmin.NombreUsuario);
+            if (usuarioExiste)
+            {
+                return Conflict("Este nombre de usuario ya está registrado.");
+            }
+
+            //inicio transaccion:
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                //registrar usuario:
+                var usuario = new Usuarios
+                {
+                    UsuEmail = nuevoAdmin.Email,
+                    UsuUsername = nuevoAdmin.NombreUsuario,
+                    UsuContrasenaHash = BCrypt.Net.BCrypt.HashPassword(nuevoAdmin.Contrasena, workFactor: 11),
+                    UsuRol = "admin"
+                };
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                var admin = new Administradores
+                {
+                    UsuId = usuario.UsuId, //fk
+                    AdNombre = nuevoAdmin.NombreAdmin
+                };
+                _context.Add(admin);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok("Usuario Administrador Registrado Correctamente");
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, new { message = "Error al registrar usuario Administrador." });
+            }
         }
 
         private string GenerarToken(Usuarios usuario)
