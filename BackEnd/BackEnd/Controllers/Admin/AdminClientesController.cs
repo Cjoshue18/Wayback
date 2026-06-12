@@ -55,45 +55,29 @@ namespace BackEnd.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<ActionResult<AdminClientesDTO>> GetClienteByID(int id)
         {
-            var cliente = await _context.Clientes
-                .Include(c => c.Usuario) //Incluye la información del usuario relacionado con cada cliente
-                .FirstOrDefaultAsync(c => c.CliId == id); //busca y lo asigna a la variable
-            if (cliente == null)
-            {
-                return NotFound(); //si no lo encuentra devuelve no encontrado
-            }
-            var dto = new AdminClientesDTO //si lo encuentro, asigna los datos en el dto
-            {
-                CliId = cliente.CliId,
-                CliDocumento = cliente.CliDocumento,
-                CliTipoDocumento = cliente.CliTipoDocumento,
-                CliNombre = cliente.CliNombre,
-                CliApellido = cliente.CliApellido,
-                CliTelefono = cliente.CliTelefono,
-                Usuario = new AdminUsuariosDTO
+            var dto = await _context.Clientes
+                .Where(c => c.CliId == id)
+                .Select(cliente => new AdminClientesDTO //si lo encuentro, asigna los datos en el dto
                 {
-                    UsuId = cliente.Usuario.UsuId,
-                    UsuUsername = cliente.Usuario.UsuUsername,
-                    UsuEmail = cliente.Usuario.UsuEmail,
-                    UsuFechaRegistro = cliente.Usuario.UsuFechaRegistro
-                }
-            };
+                    CliId = cliente.CliId,
+                    CliDocumento = cliente.CliDocumento,
+                    CliTipoDocumento = cliente.CliTipoDocumento,
+                    CliNombre = cliente.CliNombre,
+                    CliApellido = cliente.CliApellido,
+                    CliTelefono = cliente.CliTelefono,
+                    Usuario = new AdminUsuariosDTO
+                    {
+                        UsuId = cliente.Usuario.UsuId,
+                        UsuUsername = cliente.Usuario.UsuUsername,
+                        UsuEmail = cliente.Usuario.UsuEmail,
+                        UsuFechaRegistro = cliente.Usuario.UsuFechaRegistro
+                    }
+                }).FirstOrDefaultAsync(); //Se ejecuta como una sola línea de SQL
+            if (dto == null) return NotFound();
+            
             return Ok(dto); //Si lo encuentra devuelve el Cliente
         }
         /*
-        [HttpPost]
-        public async Task<ActionResult<AdminClientesDTO>> AddCliente([FromBody] Clientes nuevoCliente)
-        {
-            if(nuevoCliente == null || nuevoCliente.Usuario == null)
-            {
-                return BadRequest();
-            }
-            _context.Clientes.Add(nuevoCliente); //añado el nuevo cliente al contexto (tabla)
-            await _context.SaveChangesAsync(); //guardo los cambios
-            return CreatedAtAction(nameof(GetClienteByID), new {id = nuevoCliente.CliId }, nuevoCliente ); 
-            //muestro lo que acabo de agregar
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCliente(int id, [FromBody] Clientes upCliente)
         {
