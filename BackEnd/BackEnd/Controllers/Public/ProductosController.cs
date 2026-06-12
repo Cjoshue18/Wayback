@@ -25,10 +25,11 @@ namespace BackEnd.Controllers.Public
                 .Select(p => new ProductoTarjetaDTO
                 {
                     Id = p.ProId,
-                    Nombre = p.ProNombre,
-                    Precio = p.ProPrecio,
-                    Descuento = p.ProDescuento,
-                    FinDescuento = p.ProDescuentoFin,
+                    ProNombre = p.ProNombre,
+                    ProPrecio = p.ProPrecio,
+                    ProDescuento = p.ProDescuento,
+                    ProDescuentoInicio = p.ProDescuentoInicio,
+                    ProDescuentoFin = p.ProDescuentoFin,
                     ImagenesUrl = p.Imagenes
                         .Select(v => v.ImgURL)
                         .ToList(),
@@ -62,10 +63,11 @@ namespace BackEnd.Controllers.Public
                 .Select(p => new ProductoTarjetaDTO
                 {
                     Id = p.ProId,
-                    Nombre = p.ProNombre,
-                    Precio = p.ProPrecio,
-                    Descuento = p.ProDescuento,
-                    FinDescuento = p.ProDescuentoFin,
+                    ProNombre = p.ProNombre,
+                    ProPrecio = p.ProPrecio,
+                    ProDescuento = p.ProDescuento,
+                    ProDescuentoInicio = p.ProDescuentoInicio,
+                    ProDescuentoFin = p.ProDescuentoFin,
                     ImagenesUrl = p.Imagenes
                         .Select(v => v.ImgURL)
                         .ToList(),

@@ -3,10 +3,11 @@
     public class ProductoTarjetaDTO
     {
         public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public decimal Precio { get; set; }
-        public int? Descuento { get; set; }
-        public DateTime? FinDescuento { get; set; }
+        public string ProNombre { get; set; } = string.Empty;
+        public decimal ProPrecio { get; set; }
+        public short? ProDescuento { get; set; }
+        public DateTime? ProDescuentoInicio { get; set; }
+        public DateTime? ProDescuentoFin { get; set; }
         public List<string>? ImagenesUrl { get; set; } = new List<string>();
         public string Categoria {  get; set; }  = string.Empty;
         public string? Estilo { get; set; }

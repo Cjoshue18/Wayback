@@ -79,3 +79,6 @@ GET {{BackEnd_HostAddress}}/api/productos/estilo=2
 Accept: application/json
 
 ###
+
+GET {{BackEnd_HostAddress}}/api/admin/reportes/productos
+Accept: application/json
