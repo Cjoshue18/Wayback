@@ -124,3 +124,8 @@ DELETE {{BackEnd_HostAddress}}/api/admin/reportes/productos/44
 Accept: application/json
 
 ###
+
+GET {{BackEnd_HostAddress}}/api/productos/5
+Accept: application/json
+
+###

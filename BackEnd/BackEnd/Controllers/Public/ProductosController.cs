@@ -16,10 +16,11 @@ namespace BackEnd.Controllers.Public
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoDescripcionDTO>>> GetProductos()
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductoDescripcionDTO>> GetProductosByID(int id)
         {
             var dto = await _context.Productos
+                .Where(p => p.ProId == id)
                 .Select(p => new ProductoDescripcionDTO
                 {
                     ProId = p.ProId,
@@ -45,7 +46,9 @@ namespace BackEnd.Controllers.Public
                         .Distinct()
                         .ToList()
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
+            if (dto == null) return NotFound();
+
             return Ok(dto);
         }
 
