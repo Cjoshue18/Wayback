@@ -82,3 +82,45 @@ Accept: application/json
 
 GET {{BackEnd_HostAddress}}/api/admin/reportes/productos
 Accept: application/json
+
+###
+GET {{BackEnd_HostAddress}}/api/admin/reportes/productos/44
+Accept: application/json
+
+###
+POST {{BackEnd_HostAddress}}/api/admin/reportes/productos
+Content-Type: application/json
+
+{
+  "ProNombre": "Camiseta Oversize Premium",
+  "ProDescripcion": "Algodón pesado 240gr ideal para streetwear.",
+  "ProGenero": "Unisex",
+  "CatId": 2,
+  "EstId": 1,
+  "ProPrecio": 39.99,
+  "ProDescuento": 10,
+  "ProDescuentoInicio": "2026-06-01T00:00:00Z",
+  "ProDescuentoFin": "2026-06-15T23:59:59Z"
+}
+
+###
+PUT {{BackEnd_HostAddress}}/api/admin/reportes/productos/44
+Content-Type: application/json
+
+{
+  "ProNombre": "Camiseta Oversize Premium (Editada)",
+  "ProDescripcion": "Nueva descripción actualizada desde FastAPI.",
+  "ProGenero": "Unisex",
+  "CatId": 2,
+  "EstId": 1,
+  "ProPrecio": 35.00,
+  "ProDescuento": null,
+  "ProDescuentoInicio": null,
+  "ProDescuentoFin": null
+}
+
+###
+DELETE {{BackEnd_HostAddress}}/api/admin/reportes/productos/44
+Accept: application/json
+
+###

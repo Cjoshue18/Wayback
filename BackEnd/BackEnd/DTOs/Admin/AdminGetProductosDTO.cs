@@ -9,7 +9,7 @@
         public string? ProEstilo { get; set; }
         public decimal ProPrecio { get; set; }
         public short? ProDescuento { get; set; }
-        public bool? ProVigenteDescuento { get; set; }
+        public bool ProVigenteDescuento { get; set; }
         public DateTime? ProFechaCreacion {  get; set; }
         public int ProTotalStock { get; set; }
 
