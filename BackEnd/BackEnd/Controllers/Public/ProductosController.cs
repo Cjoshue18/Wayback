@@ -16,6 +16,39 @@ namespace BackEnd.Controllers.Public
             _context = context;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProductoDescripcionDTO>>> GetProductos()
+        {
+            var dto = await _context.Productos
+                .Select(p => new ProductoDescripcionDTO
+                {
+                    ProId = p.ProId,
+                    ProNombre = p.ProNombre,
+                    ProGenero = p.ProGenero,
+                    ProDescripcion = p.ProDescripcion != null ? p.ProDescripcion : "Sin descripción.",
+                    ProPrecio = p.ProPrecio,
+                    ProDescuentoInicio = p.ProDescuentoInicio,
+                    ProDescuentoFin = p.ProDescuentoFin,
+                    ImagenesUrl = p.Imagenes
+                        .Select(i => i.ImgURL)
+                        .ToList(),
+                    Categoria = p.Categoria.CatNombre,
+                    Estilo = p.Estilo != null ? p.Estilo.EstNombre : null,
+                    Colores = p.Variantes
+                        .Where(v => v.VarStock > 0)
+                        .Select(v => v.VarColor.ColorHex)
+                        .Distinct()
+                        .ToList(),
+                    Tallas = p.Variantes
+                        .Where(v => v.VarStock > 0)
+                        .Select(v => v.VarTalla)
+                        .Distinct()
+                        .ToList()
+                })
+                .ToListAsync();
+            return Ok(dto);
+        }
+
         [HttpGet("categoria={id:int}")]
         public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductosByCategoriaID(int id)
         {
@@ -24,7 +57,7 @@ namespace BackEnd.Controllers.Public
                 .OrderBy(p => p.ProId)
                 .Select(p => new ProductoTarjetaDTO
                 {
-                    Id = p.ProId,
+                    ProId = p.ProId,
                     ProNombre = p.ProNombre,
                     ProPrecio = p.ProPrecio,
                     ProDescuento = p.ProDescuento,
@@ -62,7 +95,7 @@ namespace BackEnd.Controllers.Public
                 .OrderBy(p => p.ProId)
                 .Select(p => new ProductoTarjetaDTO
                 {
-                    Id = p.ProId,
+                    ProId = p.ProId,
                     ProNombre = p.ProNombre,
                     ProPrecio = p.ProPrecio,
                     ProDescuento = p.ProDescuento,
