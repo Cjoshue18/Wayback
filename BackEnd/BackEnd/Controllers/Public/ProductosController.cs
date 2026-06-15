@@ -70,7 +70,7 @@ namespace BackEnd.Controllers.Public
                         .Select(v => v.ImgURL)
                         .ToList(),
                     Categoria = p.Categoria.CatNombre,
-                    Estilo = p.Estilo != null ? p.Estilo.EstNombre : null, 
+                    Estilo = p.Estilo != null ? p.Estilo.EstNombre : null,
                     Colores = p.Variantes
                         .Where(v => v.VarStock > 0)
                         .Select(v => v.VarColor.ColorHex)
@@ -89,7 +89,7 @@ namespace BackEnd.Controllers.Public
             }
             return Ok(dto);
         }
-        
+
         [HttpGet("estilo={id:int}")]
         public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductosByEstiloID(int id)
         {
@@ -126,6 +126,66 @@ namespace BackEnd.Controllers.Public
                 return Ok(new List<ProductoTarjetaDTO>());
             }
             return Ok(dto);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] int? Categoria,
+            [FromQuery] int? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax)
+        {
+            var query = _context.Productos.AsQueryable();
+            if (Categoria.HasValue)
+            {
+                query = query.Where(p => p.CatId == Categoria.Value);
+            }
+            if (Estilo.HasValue)
+            {
+                query = query.Where(p => p.EstId == Estilo.Value);
+            }
+            if (!string.IsNullOrEmpty(genero))
+            {
+                query = query.Where(p => p.ProGenero == genero);
+            }
+            if (PrecioMin.HasValue)
+            {
+                query = query.Where(p => p.ProPrecio >= PrecioMin.Value);
+            }
+            if (PrecioMax.HasValue)
+            {
+                query = query.Where(p => p.ProPrecio <= PrecioMax.Value);
+            }
+
+            var productos = await query
+                .Select(p => new ProductoTarjetaDTO
+                {
+                    ProId = p.ProId,
+                    ProNombre = p.ProNombre,
+                    ProPrecio = p.ProPrecio,
+                    ProDescuento = p.ProDescuento,
+                    ProDescuentoInicio = p.ProDescuentoInicio,
+                    ProDescuentoFin = p.ProDescuentoFin,
+                    ImagenesUrl = p.Imagenes
+                        .Select(v => v.ImgURL)
+                        .ToList(),
+                    Categoria = p.Categoria.CatNombre,
+                    Estilo = p.Estilo!.EstNombre, //como estoy buscando por estilo, no será nulo
+                    Colores = p.Variantes
+                        .Where(v => v.VarStock > 0)
+                        .Select(v => v.VarColor.ColorHex)
+                        .Distinct()
+                        .ToList(),
+                    Tallas = p.Variantes
+                        .Where(v => v.VarStock > 0)
+                        .Select(v => v.VarTalla)
+                        .Distinct()
+                        .ToList()
+
+                }).ToListAsync();
+
+            if (!productos.Any())
+            {
+                return NotFound();
+            }
+            return Ok(productos);
         }
     }
 }
