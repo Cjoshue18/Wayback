@@ -125,12 +125,17 @@ Accept: application/json
 
 ###
 
-GET {{BackEnd_HostAddress}}/api/productos/5
+GET {{BackEnd_HostAddress}}/api/productos
 Accept: application/json
 
 ###
 
 GET {{BackEnd_HostAddress}}/api/productos?categoria=5&estilo=3&preciomax=37&preciomin=33
+Accept: application/json
+
+###
+
+GET {{BackEnd_HostAddress}}/api/productos?color=azul&&genero=unisex
 Accept: application/json
 
 ###

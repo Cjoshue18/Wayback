@@ -130,9 +130,10 @@ namespace BackEnd.Controllers.Public
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] int? Categoria,
-            [FromQuery] int? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax)
+            [FromQuery] int? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
+            [FromQuery] string? color, [FromQuery] string? talla)
         {
-            var query = _context.Productos.AsQueryable();
+            var query = _context.Productos.Include(p => p.Variantes).AsQueryable();
             if (Categoria.HasValue)
             {
                 query = query.Where(p => p.CatId == Categoria.Value);
@@ -143,7 +144,7 @@ namespace BackEnd.Controllers.Public
             }
             if (!string.IsNullOrEmpty(genero))
             {
-                query = query.Where(p => p.ProGenero == genero);
+                query = query.Where(p => p.ProGenero.ToLower() == genero.ToLower());
             }
             if (PrecioMin.HasValue)
             {
@@ -152,6 +153,14 @@ namespace BackEnd.Controllers.Public
             if (PrecioMax.HasValue)
             {
                 query = query.Where(p => p.ProPrecio <= PrecioMax.Value);
+            }
+            if (!string.IsNullOrEmpty(talla))
+            {
+                query = query.Where(p => p.Variantes.Any(v => v.VarTalla.ToLower() == talla.ToLower()));
+            }
+            if (!string.IsNullOrEmpty(color))
+            {
+                query = query.Where(p => p.Variantes.Any(v => v.VarColor.ColorNombre.ToLower() == color.ToLower()));
             }
 
             var productos = await query
