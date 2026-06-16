@@ -19,7 +19,7 @@ namespace BackEnd.Controllers.Admin
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminClientesDTO>>> GetClientes()
+        public async Task<ActionResult<IEnumerable<AdminGetClientesDTO>>> GetClientes()
         {
             var clientes = await _context.Clientes
                 .Include(c => c.Usuario)
@@ -27,11 +27,11 @@ namespace BackEnd.Controllers.Admin
 
             if(!clientes.Any())
             {
-                return Ok(new List<AdminClientesDTO>());
+                return Ok(new List<AdminGetClientesDTO>());
             }
 
             //Lo convierto en JSON usando usando las DTO para evitar referencia circular
-            var dto = clientes.Select(c => new AdminClientesDTO
+            var dto = clientes.Select(c => new AdminGetClientesDTO
             {
                 CliId = c.CliId,
                 CliDocumento = c.CliDocumento,
@@ -53,11 +53,11 @@ namespace BackEnd.Controllers.Admin
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<AdminClientesDTO>> GetClienteByID(int id)
+        public async Task<ActionResult<AdminGetClientesDTO>> GetClienteByID(int id)
         {
             var dto = await _context.Clientes
                 .Where(c => c.CliId == id)
-                .Select(cliente => new AdminClientesDTO //si lo encuentro, asigna los datos en el dto
+                .Select(cliente => new AdminGetClientesDTO //si lo encuentro, asigna los datos en el dto
                 {
                     CliId = cliente.CliId,
                     CliDocumento = cliente.CliDocumento,

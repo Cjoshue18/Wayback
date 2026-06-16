@@ -85,7 +85,7 @@ namespace BackEnd.Controllers.Admin
                 ProNombre = dto.ProNombre,
                 ProDescripcion = dto.ProDescripcion,
                 ProGenero = dto.ProGenero,
-                CatId = dto.CatID,
+                CatId = dto.CatId,
                 EstId = dto.EstId,
                 ProPrecio = dto.ProPrecio,
                 ProDescuento = dto.ProDescuento,
@@ -114,7 +114,7 @@ namespace BackEnd.Controllers.Admin
             producto.ProNombre = dto.ProNombre;
             producto.ProDescripcion = dto.ProDescripcion;
             producto.ProGenero = dto.ProGenero;
-            producto.CatId = dto.CatID;
+            producto.CatId = dto.CatId;
             producto.EstId = dto.EstId;
             producto.ProPrecio = dto.ProPrecio;
             producto.ProDescuento = dto.ProDescuento;

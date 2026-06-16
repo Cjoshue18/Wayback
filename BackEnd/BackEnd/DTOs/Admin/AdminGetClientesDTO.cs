@@ -1,6 +1,6 @@
 ﻿namespace BackEnd.DTOs.Admin
 {
-    public class AdminClientesDTO
+    public class AdminGetClientesDTO
     {
         public int CliId { get; set; }
         public string CliDocumento { get; set; } = string.Empty;
