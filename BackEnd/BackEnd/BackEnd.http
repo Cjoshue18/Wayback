@@ -139,3 +139,6 @@ GET {{BackEnd_HostAddress}}/api/productos?color=azul&&genero=unisex
 Accept: application/json
 
 ###
+
+GET {{BackEnd_HostAddress}}/api/productos?categoria=1
+###

@@ -133,7 +133,7 @@ namespace BackEnd.Controllers.Public
             [FromQuery] int? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
             [FromQuery] string? color, [FromQuery] string? talla)
         {
-            var query = _context.Productos.Include(p => p.Variantes).AsQueryable();
+            var query = _context.Productos.AsQueryable();
             if (Categoria.HasValue)
             {
                 query = query.Where(p => p.CatId == Categoria.Value);
