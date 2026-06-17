@@ -89,14 +89,14 @@ namespace BackEnd.Controllers.Admin
             }
 
             var emailExiste = await _context.Usuarios
-                .AnyAsync(u => u.UsuEmail == upCliente.Email && u.UsuId != cliente.UsuId); 
+                .AnyAsync(u => u.UsuEmail == upCliente.UsuEmail && u.UsuId != cliente.UsuId); 
             if (emailExiste)
             {
                 return Conflict("Este email ya está registrado.");
             }
 
             var usuarioExiste = await _context.Usuarios
-                .AnyAsync(u => u.UsuUsername == upCliente.NombreUsuario && u.UsuId != cliente.UsuId);
+                .AnyAsync(u => u.UsuUsername == upCliente.UsuUsername && u.UsuId != cliente.UsuId);
             if (usuarioExiste)
             {
                 return Conflict("Este nombre de usuario ya está registrado.");
@@ -104,11 +104,11 @@ namespace BackEnd.Controllers.Admin
             //se añade && UsuId para que no compare consigo mismo por si no se envia nada en el formulario y no salte la condicion
 
 
-            cliente.CliNombre = upCliente.Nombres;
-            cliente.CliApellido = upCliente.Apellidos;
-            cliente.CliTelefono = upCliente.Telefono;
-            cliente.Usuario.UsuUsername = upCliente.NombreUsuario;
-            cliente.Usuario.UsuEmail = upCliente.Email;
+            cliente.CliNombre = upCliente.CliNombre;
+            cliente.CliApellido = upCliente.CliApellido;
+            cliente.CliTelefono = upCliente.CliTelefono;
+            cliente.Usuario.UsuUsername = upCliente.UsuUsername;
+            cliente.Usuario.UsuEmail = upCliente.UsuEmail;
             await _context.SaveChangesAsync(); //guardar los cambios
             return NoContent(); //no retorna contenido
         }

@@ -2,10 +2,10 @@
 {
     public class EditarDatosClientesDTO
     {
-        public string Nombres { get; set; } = string.Empty;
-        public string Apellidos { get; set; } = string.Empty;
-        public string NombreUsuario {  get; set; } = string.Empty;
-        public string Email {  get; set; } = string.Empty;
-        public string? Telefono {  get; set; }
+        public string CliNombre { get; set; } = string.Empty;
+        public string CliApellido { get; set; } = string.Empty;
+        public string UsuUsername {  get; set; } = string.Empty;
+        public string UsuEmail {  get; set; } = string.Empty;
+        public string? CliTelefono {  get; set; }
     }
 }
