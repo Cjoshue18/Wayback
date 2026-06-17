@@ -142,3 +142,6 @@ Accept: application/json
 
 GET {{BackEnd_HostAddress}}/api/productos?categoria=1
 ###
+
+GET {{BackEnd_HostAddress}}/api/productos/2
+###

@@ -35,16 +35,14 @@ namespace BackEnd.Controllers.Public
                         .ToList(),
                     Categoria = p.Categoria.CatNombre,
                     Estilo = p.Estilo != null ? p.Estilo.EstNombre : null,
-                    Colores = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarColor.ColorHex)
-                        .Distinct()
-                        .ToList(),
-                    Tallas = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarTalla)
-                        .Distinct()
-                        .ToList()
+                    Variantes = p.Variantes.Select(v => new VariantesDetalleDTO
+                    {
+                        VarId = v.VarId,
+                        ColorNombre = v.VarColor.ColorNombre,
+                        ColorHex = v.VarColor.ColorHex,
+                        Talla = v.VarTalla,
+                        Stock = v.VarStock
+                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
             if (dto == null) return NotFound();

@@ -13,7 +13,6 @@
         public List<string>? ImagenesUrl { get; set; } = new List<string>();
         public string Categoria { get; set; } = string.Empty;
         public string? Estilo { get; set; }
-        public List<string> Colores { get; set; } = new List<string>();
-        public List<string> Tallas { get; set; } = new List<string>();
+        public List<VariantesDetalleDTO> Variantes { get; set; } = new List<VariantesDetalleDTO>();
     }
 }

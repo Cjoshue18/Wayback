@@ -1,6 +1,7 @@
 ﻿using BackEnd.Data;
 using BackEnd.DTOs.Admin;
 using BackEnd.DTOs.Cliente;
+using BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,17 +23,8 @@ namespace BackEnd.Controllers.Admin
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdminGetClientesDTO>>> GetClientes()
         {
-            var clientes = await _context.Clientes
-                .Include(c => c.Usuario)
-                .ToListAsync(); //obtengo los datos en memoria de la base de datos
-
-            if(!clientes.Any())
-            {
-                return Ok(new List<AdminGetClientesDTO>());
-            }
-
             //Lo convierto en JSON usando usando las DTO para evitar referencia circular
-            var dto = clientes.Select(c => new AdminGetClientesDTO
+            var dto = await _context.Clientes.Select(c => new AdminGetClientesDTO
             {
                 CliId = c.CliId,
                 CliDocumento = c.CliDocumento,
@@ -47,7 +39,12 @@ namespace BackEnd.Controllers.Admin
                     UsuEmail = c.Usuario.UsuEmail,
                     UsuFechaRegistro = c.Usuario.UsuFechaRegistro
                 }
-            }).ToList(); //lo convierto en lista al ser muchos registros
+            }).ToListAsync(); //lo convierto en lista al ser muchos registros
+
+            if (!dto.Any())
+            {
+                return Ok(new List<AdminGetClientesDTO>());
+            }
 
             return Ok(dto);
         }
