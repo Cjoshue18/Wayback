@@ -1,5 +1,6 @@
 ﻿using BackEnd.Data;
 using BackEnd.DTOs.Admin;
+using BackEnd.DTOs.Cliente;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BackEnd.Controllers.Admin
 {
     [Route("api/admin/reportes/clientes")]
+    [Authorize(Roles = "admin")]
     [ApiController]
     public class AdminClientesController : ControllerBase
     {
@@ -17,7 +19,6 @@ namespace BackEnd.Controllers.Admin
             _context = context;
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdminGetClientesDTO>>> GetClientes()
         {
@@ -51,7 +52,6 @@ namespace BackEnd.Controllers.Admin
             return Ok(dto);
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<AdminGetClientesDTO>> GetClienteByID(int id)
         {
@@ -77,9 +77,8 @@ namespace BackEnd.Controllers.Admin
             
             return Ok(dto); //Si lo encuentra devuelve el Cliente
         }
-        /*
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCliente(int id, [FromBody] Clientes upCliente)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> EditarCliente(int id, [FromBody] EditarDatosClientesDTO upCliente)
         {
             var cliente = await _context.Clientes
                 .Include(c => c.Usuario)
@@ -88,25 +87,34 @@ namespace BackEnd.Controllers.Admin
             {
                 return NotFound();
             }
-            cliente.CliDocument = upCliente.CliDocument;
-            cliente.CliDocumentType = upCliente.CliDocumentType;
-            cliente.CliName = upCliente.CliName;
-            cliente.CliLastName = upCliente.CliLastName;
-            cliente.CliPhone = upCliente.CliPhone;
-            cliente.CliPasarelaId = upCliente.CliPasarelaId;
-            
-            //Si tambien buscamos cambiar sus datos en la tabla Usuarios:
-            if(cliente.Usuario != null && upCliente.Usuario != null)
+
+            var emailExiste = await _context.Usuarios
+                .AnyAsync(u => u.UsuEmail == upCliente.Email && u.UsuId != cliente.UsuId); 
+            if (emailExiste)
             {
-                cliente.Usuario.UsuEmail = upCliente.Usuario.UsuEmail;
-                cliente.Usuario.UsuUsername = upCliente.Usuario.UsuUsername;
+                return Conflict("Este email ya está registrado.");
             }
+
+            var usuarioExiste = await _context.Usuarios
+                .AnyAsync(u => u.UsuUsername == upCliente.NombreUsuario && u.UsuId != cliente.UsuId);
+            if (usuarioExiste)
+            {
+                return Conflict("Este nombre de usuario ya está registrado.");
+            }
+            //se añade && UsuId para que no compare consigo mismo por si no se envia nada en el formulario y no salte la condicion
+
+
+            cliente.CliNombre = upCliente.Nombres;
+            cliente.CliApellido = upCliente.Apellidos;
+            cliente.CliTelefono = upCliente.Telefono;
+            cliente.Usuario.UsuUsername = upCliente.NombreUsuario;
+            cliente.Usuario.UsuEmail = upCliente.Email;
             await _context.SaveChangesAsync(); //guardar los cambios
             return NoContent(); //no retorna contenido
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        [HttpDelete("{id}")] //Hard DELETE, no usar si no es necesario, solo para pruebas
+        public async Task<IActionResult> EliminarCliente(int id)
         {
             var cliente = await _context.Clientes
                 .Include(c => c.Usuario)
@@ -124,6 +132,5 @@ namespace BackEnd.Controllers.Admin
             await _context.SaveChangesAsync();
             return NoContent();
         }
-        */
     }
 }
