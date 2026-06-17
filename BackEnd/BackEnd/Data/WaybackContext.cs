@@ -461,26 +461,26 @@ namespace BackEnd.Data
 
                 entity.Property(p => p.PedDirCalle)
                       .HasMaxLength(100)
-                      .HasColumnName("ped_calle")
+                      .HasColumnName("ped_dir_calle")
                       .IsRequired();
 
                 entity.Property(p => p.PedDirDistrito)
                       .HasMaxLength(50)
-                      .HasColumnName("ped_distrito")
+                      .HasColumnName("ped_dir_distrito")
                       .IsRequired();
 
                 entity.Property(p => p.PedDirProvincia)
                       .HasMaxLength(50)
-                      .HasColumnName("ped_distrito")
+                      .HasColumnName("ped_dir_provincia")
                       .IsRequired();
 
                 entity.Property(p => p.PedDirDepartamento)
                       .HasMaxLength(50)
-                      .HasColumnName("ped_departamento")
+                      .HasColumnName("ped_dir_departamento")
                       .IsRequired();
 
                 entity.Property(p => p.PedDirReferencia)
-                      .HasColumnName("ped_referencia")
+                      .HasColumnName("ped_dir_referencia")
                       .HasMaxLength(200);
 
                 entity.Property(e => e.PedEstado)
