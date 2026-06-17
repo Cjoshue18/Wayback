@@ -4,8 +4,22 @@
     {
         public int PedId { get; set; }
         public int CliId { get; set; }
+
         public int? MetId { get; set; }
+        //Snapshot de Método de Pago
+        public string? PedMetTipoPago { get; set; }
+        public string? PedMetUltimos4 { get; set; }
+
+        //Mantenemos la referencia para analisis
         public int? DirId { get; set; }
+        //Hacemos un snapshot o captura de los datos en ese momento al igual que los precios en detalle de pedidos
+        public string PedDirCalle { get; set; } = string.Empty;
+        public string PedDirDistrito { get; set; } = string.Empty;
+        public string PedDirProvincia { get; set; } = string.Empty;
+        public string PedDirDepartamento { get; set; } = string.Empty;
+        public string? PedDirReferencia { get; set; }
+        //Hasta aca es la snapshot del contenido de la tabla Direcciones
+
         public string PedEstado { get; set; } = "pendiente";
         public decimal PedTotal { get; set; }
         public string? PedPasarelaCargoId { get; set; }

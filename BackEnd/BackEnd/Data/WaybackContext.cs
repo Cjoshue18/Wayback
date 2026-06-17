@@ -448,8 +448,40 @@ namespace BackEnd.Data
                 entity.Property(e => e.MetId)
                       .HasColumnName("met_id"); // FK nullable
 
+                entity.Property(p => p.PedMetTipoPago)
+                      .HasColumnName("ped_met_tipo_pago")
+                      .HasMaxLength(20);
+
+                entity.Property(p => p.PedMetUltimos4)
+                      .HasColumnName("ped_met_ultimos4")
+                      .HasMaxLength(4);
+
                 entity.Property(e => e.DirId)
                       .HasColumnName("dir_id"); // FK nullable
+
+                entity.Property(p => p.PedDirCalle)
+                      .HasMaxLength(100)
+                      .HasColumnName("ped_calle")
+                      .IsRequired();
+
+                entity.Property(p => p.PedDirDistrito)
+                      .HasMaxLength(50)
+                      .HasColumnName("ped_distrito")
+                      .IsRequired();
+
+                entity.Property(p => p.PedDirProvincia)
+                      .HasMaxLength(50)
+                      .HasColumnName("ped_distrito")
+                      .IsRequired();
+
+                entity.Property(p => p.PedDirDepartamento)
+                      .HasMaxLength(50)
+                      .HasColumnName("ped_departamento")
+                      .IsRequired();
+
+                entity.Property(p => p.PedDirReferencia)
+                      .HasColumnName("ped_referencia")
+                      .HasMaxLength(200);
 
                 entity.Property(e => e.PedEstado)
                       .HasColumnName("ped_estado")
@@ -484,13 +516,15 @@ namespace BackEnd.Data
                 entity.HasOne(p => p.MetodoPago) //un pedido puede tener un metodo de pago
                       .WithMany(m => m.Pedidos) //un metodo de pago puede tener muchos pedidos
                       .HasForeignKey(p => p.MetId)
-                      .OnDelete(DeleteBehavior.Restrict) //no permite borrar metodo de pago si tiene pedidos asociados, para mantener integridad historica de pedidos
+                      .OnDelete(DeleteBehavior.SetNull)//mismo dilema que con direcciones
                       .HasConstraintName("fk_ped_met_id");
 
                 entity.HasOne(p => p.Direccion) //un pedido puede tener una direccion
                       .WithMany(d => d.Pedidos) //una direccion puede estar en muchos pedidos
                       .HasForeignKey(p => p.DirId)
-                      .OnDelete(DeleteBehavior.Restrict) //no permite borrar direccion si tiene pedidos asociados, para mantener integridad historica de pedidos
+                      .OnDelete(DeleteBehavior.SetNull) //permite eliminar una direccion aunque este siendo usada, porque
+                      //ya existe una snapshot de la direccion en ese momento, asi un cliente puede borrar una direccion asociada a su perfil
+                      //pero no se pierde esa informacion porque permanece en la base de datos para auditoria o analisis posterior
                       .HasConstraintName("fk_ped_dir_id");
             });
 
