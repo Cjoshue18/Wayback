@@ -13,7 +13,7 @@ namespace BackEnd.DTOs.Admin
 
         [Required(ErrorMessage = "Campo Obligatorio.")]
         [MaxLength(10, ErrorMessage = "El género del producto debe tener un máximo de 10 caracteres.")]
-        [RegularExpression("^(Masculino|Femenino|Unisex)$",
+        [RegularExpression("^(masculino|femenino|unisex)$",
             ErrorMessage = "El género debe ser masculino, femenino o unisex.")]
         public string ProGenero { get; set; } = string.Empty;
 
