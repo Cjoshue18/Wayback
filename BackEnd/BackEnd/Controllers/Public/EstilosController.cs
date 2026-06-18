@@ -19,7 +19,7 @@ namespace BackEnd.Controllers.Public
         public async Task<ActionResult<IEnumerable<EstilosMenuDTO>>> GetEstilos()
         {
             var estilos = await _context.Estilos
-                .OrderBy(e => e.EstNombre)
+                .OrderBy(e => e.EstId)
                 .ToListAsync();
 
             if (!estilos.Any())

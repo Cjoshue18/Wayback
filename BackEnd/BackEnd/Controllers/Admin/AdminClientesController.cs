@@ -24,7 +24,9 @@ namespace BackEnd.Controllers.Admin
         public async Task<ActionResult<IEnumerable<AdminGetClientesDTO>>> GetClientes()
         {
             //Lo convierto en JSON usando usando las DTO para evitar referencia circular
-            var dto = await _context.Clientes.Select(c => new AdminGetClientesDTO
+            var dto = await _context.Clientes
+                .OrderBy(c => c.CliId)
+                .Select(c => new AdminGetClientesDTO
             {
                 CliId = c.CliId,
                 CliDocumento = c.CliDocumento,

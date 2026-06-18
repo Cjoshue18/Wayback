@@ -20,7 +20,7 @@ namespace BackEnd.Controllers.Public
         public async Task<ActionResult<IEnumerable<CategoriasMenuDTO>>> GetCategorias()
         {
             var categorias = await _context.Categorias
-                .OrderBy(c => c.CatNombre)
+                .OrderBy(c => c.CatId)
                 .ToListAsync();
 
             if (!categorias.Any())
