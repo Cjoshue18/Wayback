@@ -268,7 +268,7 @@ namespace BackEnd.Data
                 entity.HasOne(p => p.Estilo)
                       .WithMany(e => e.Productos)
                       .HasForeignKey(p => p.EstId)
-                      .OnDelete(DeleteBehavior.SetNull) //si borro estilo, en productos se vera un null
+                      .OnDelete(DeleteBehavior.Restrict) //si borro estilo, no dejará borrarlo porque si bien son opcionales, por integridad de historial no se borra
                       .HasConstraintName("fk_pro_est_id");
             });
 

@@ -145,3 +145,36 @@ GET {{BackEnd_HostAddress}}/api/productos?categoria=1
 
 GET {{BackEnd_HostAddress}}/api/productos/2
 ###
+
+POST {{BackEnd_HostAddress}}/api/admin/reportes/categorias
+Content-Type: application/json
+{
+  "CatNombre": "EsoOlil"
+}
+###
+PUT {{BackEnd_HostAddress}}/api/admin/reportes/categorias/14
+Content-Type: application/json
+{
+  "CatNombre": "EsoOASDASlil"
+}
+###
+DELETE {{BackEnd_HostAddress}}/api/admin/reportes/categorias/14
+Accept: application/json
+###
+###
+
+POST {{BackEnd_HostAddress}}/api/admin/reportes/estilos
+Content-Type: application/json
+{
+  "EstNombre": "EsoOlil"
+}
+###
+PUT {{BackEnd_HostAddress}}/api/admin/reportes/estilos/5
+Content-Type: application/json
+{
+  "EstNombre": "EsoOASDASlil"
+}
+###
+DELETE {{BackEnd_HostAddress}}/api/admin/reportes/estilos/5
+Accept: application/json
+###
