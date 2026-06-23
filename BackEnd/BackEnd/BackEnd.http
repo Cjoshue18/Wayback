@@ -178,3 +178,16 @@ Content-Type: application/json
 DELETE {{BackEnd_HostAddress}}/api/admin/reportes/estilos/5
 Accept: application/json
 ###
+
+POST {{BackEnd_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "UsuUsernameOrEmail": "emaildeprueba@gmail.com",
+  "UsuContrasena": "contrasenaDePrueba"
+}
+###
+
+GET {{BackEnd_Https}}/api/profile/mi-perfil
+Accept: application/json
+Authorization: {{mitoken}}
+###

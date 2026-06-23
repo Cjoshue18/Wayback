@@ -1,6 +1,6 @@
 ﻿using BackEnd.Data;
 using BackEnd.DTOs.Admin;
-using BackEnd.DTOs.Cliente;
+using BackEnd.DTOs.ClientesVista;
 using BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

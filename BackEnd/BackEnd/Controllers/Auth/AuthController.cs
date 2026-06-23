@@ -176,9 +176,10 @@ namespace BackEnd.Controllers
             {
                 Subject = new ClaimsIdentity( //claims son la información que queremos incluir en el token
                 [
-                    new Claim("id", usuario.UsuId.ToString()), //id de usuario como claim como string
-                    new Claim("username", usuario.UsuUsername),
-                    new Claim("email", usuario.UsuEmail),
+                    new Claim(ClaimTypes.NameIdentifier, usuario.UsuId.ToString()), 
+                    new Claim(ClaimTypes.Name, usuario.UsuUsername),
+                    new Claim(ClaimTypes.Email, usuario.UsuEmail),
+                    //cambiamos los 3 claims de arriba por tipo de claim para seguir un mismo estándar y no usar "id" "nombre" personalizados
                     new Claim(ClaimTypes.Role, usuario.UsuRol) //rol importante para las autorizaciones
                     //Se usa el ClaimType Role para poder usarlo en authorize
                 ]),
