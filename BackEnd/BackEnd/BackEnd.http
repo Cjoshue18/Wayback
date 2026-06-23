@@ -135,7 +135,7 @@ Accept: application/json
 
 ###
 
-GET {{BackEnd_HostAddress}}/api/productos?color=azul&&genero=unisex
+GET {{BackEnd_HostAddress}}/api/productos?categoria=5&categoria=4&stock=true
 Accept: application/json
 
 ###

@@ -127,18 +127,22 @@ namespace BackEnd.Controllers.Public
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] int? Categoria,
-            [FromQuery] int? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
-            [FromQuery] string? color, [FromQuery] string? talla)
+        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] List<int>? Categoria,
+            [FromQuery] List<int>? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
+            [FromQuery] List<string>? color, [FromQuery] List<string>? talla, [FromQuery] bool? stock) 
+            //usamos filtros para poder filtrar por mas filtros del mismo tipo
         {
             var query = _context.Productos.AsQueryable();
-            if (Categoria.HasValue)
+            if (Categoria != null && Categoria.Any())
             {
-                query = query.Where(p => p.CatId == Categoria.Value);
+                query = query.Where(p => Categoria.Contains(p.CatId)); //dame los productos cuyo catid este dentro de la lista
+                //algo como: Select * FROM Productos WHERE cat_id IN (List<int> categorias)
             }
-            if (Estilo.HasValue)
+            if (Estilo != null && Estilo.Any())
             {
-                query = query.Where(p => p.EstId == Estilo.Value);
+                query = query.Where(p => p.EstId.HasValue && Estilo.Contains(p.EstId.Value)); //Como estilo puede ser nulo, primero verificamos
+                //que tenga valor el estid antes de llamar al producto para evitar que haya null
+                //algo como: SELECT * FROM Productos WHERE est_id IN (List<int> estilos) AND NOT NULL
             }
             if (!string.IsNullOrEmpty(genero))
             {
@@ -152,15 +156,25 @@ namespace BackEnd.Controllers.Public
             {
                 query = query.Where(p => p.ProPrecio <= PrecioMax.Value);
             }
-            if (!string.IsNullOrEmpty(talla))
+
+            //Como talla y color estan dentro de Variantes que es una tabla  hija de Productos se hace más proceso
+            if (talla != null && talla.Any()) //si talla no es una lista vacia y tiene algun valor
             {
-                query = query.Where(p => p.Variantes.Any(v => v.VarTalla.ToLower() == talla.ToLower()));
+                                                              //esto es solo mostrar las variantes donde su varTalla esten en la lista
+                query = query.Where(p => p.Variantes.Any(v => talla.Select(t => t.ToLower()).Contains(v.VarTalla.ToLower())));
+                             //Dame los productos donde almenos una de sus variantes cumpla con la condición, por eso el "Any"
+                             //Cuando una de esas variantes cumple con la condicion, mostrará ese producto asi solo una variante cumpla
+                             //El select en talla solo es para volverlo a lower
             }
-            if (!string.IsNullOrEmpty(color))
-            {
-                query = query.Where(p => p.Variantes.Any(v => v.VarColor.ColorNombre.ToLower() == color.ToLower()));
+            if (color != null && color.Any())
+            { //aplica lo mismo que para talla
+                query = query.Where(p => p.Variantes.Any(v => color.Select(c => c.ToLower()).Contains(v.VarColor.ColorNombre.ToLower())));
             }
 
+            if (stock == true)
+            {
+                query = query.Where(p => p.Variantes.Any(v => v.VarStock > 0));
+            }
             var productos = await query
                 .Select(p => new ProductoTarjetaDTO
                 {
@@ -174,7 +188,7 @@ namespace BackEnd.Controllers.Public
                         .Select(v => v.ImgURL)
                         .ToList(),
                     Categoria = p.Categoria.CatNombre,
-                    Estilo = p.Estilo!.EstNombre, //como estoy buscando por estilo, no será nulo
+                    Estilo = p.Estilo!= null ? p.Estilo.EstNombre : null, //como estoy buscando por estilo, no será nulo
                     Colores = p.Variantes
                         .Where(v => v.VarStock > 0)
                         .Select(v => v.VarColor.ColorHex)
@@ -187,11 +201,7 @@ namespace BackEnd.Controllers.Public
                         .ToList()
 
                 }).ToListAsync();
-
-            if (!productos.Any())
-            {
-                return NotFound();
-            }
+            //a pesar de que pueda no cargar los productos nunca deberia devolver un 404, solo una lista vacia
             return Ok(productos);
         }
     }
