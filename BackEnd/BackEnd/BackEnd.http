@@ -1,6 +1,6 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyMjYxNzE1LCJleHAiOjE3ODI4NjY1MTUsImlhdCI6MTc4MjI2MTcxNSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.i5GKsJW9ZEAYFMT2ByuC_Y4yPR_W_NgsoTn1Rm_dRq8
+@mitoken = ""
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -203,6 +203,36 @@ Content-Type: application/json
   "cliTelefono": null
 }
 ###
-GET {{BackEnd_Https}}/api/profile/mi-perfil/mis-direcciones
+GET {{BackEnd_Https}}/api/profile/direcciones
 Accept: application/json
+Authorization: Bearer {{mitoken}}
+###
+
+POST {{BackEnd_Https}}/api/profile/direcciones
+Content-Type: application/json
+Authorization: Bearer {{mitoken}}
+{
+  "DirCalle": "calle",
+  "DirDistrito": "distrito",
+  "DirProvincia": "provincia",
+  "DirDepartamento": "departamento",
+  "DirReferencia": "referencia",
+  "DirPreferido": true
+}
+###
+  
+PUT {{BackEnd_Https}}/api/profile/direcciones/1
+Content-Type: application/json
+Authorization: Bearer {{mitoken}}
+{
+  "DirCalle": "calle2",
+  "DirDistrito": "distrito",
+  "DirProvincia": "provincia",
+  "DirDepartamento": "departamento",
+  "DirReferencia": "referencia",
+  "DirPreferido": false
+}
+###
+DELETE {{BackEnd_Https}}/api/profile/direcciones/1
+Content-Type: application/json
 Authorization: Bearer {{mitoken}}
