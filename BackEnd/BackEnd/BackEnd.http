@@ -1,6 +1,6 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = ""
+@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyMjYxNzE1LCJleHAiOjE3ODI4NjY1MTUsImlhdCI6MTc4MjI2MTcxNSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.i5GKsJW9ZEAYFMT2ByuC_Y4yPR_W_NgsoTn1Rm_dRq8
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -189,5 +189,20 @@ Content-Type: application/json
 
 GET {{BackEnd_Https}}/api/profile/mi-perfil
 Accept: application/json
-Authorization: {{mitoken}}
+Authorization: Bearer {{mitoken}}
 ###
+
+PUT {{BackEnd_Https}}/api/profile/mi-perfil
+Authorization: Bearer {{mitoken}}
+Content-Type: application/json
+{
+  "cliNombre": "Juan Gabriel",
+  "cliApellido": "Garcia",
+  "usuUsername": "emaildeprueba",
+  "usuEmail": "emaildeprueba@gmail.com",
+  "cliTelefono": null
+}
+###
+GET {{BackEnd_Https}}/api/profile/mi-perfil/mis-direcciones
+Accept: application/json
+Authorization: Bearer {{mitoken}}
