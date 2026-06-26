@@ -1,6 +1,6 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = ""
+@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyNDM2NDExLCJleHAiOjE3ODMwNDEyMTEsImlhdCI6MTc4MjQzNjQxMSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.bahFaDb422AmgAJ23piO0SXOz_s5e89KRHTyqd306Q4
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -196,11 +196,11 @@ PUT {{BackEnd_Https}}/api/profile/mi-perfil
 Authorization: Bearer {{mitoken}}
 Content-Type: application/json
 {
-  "cliNombre": "Juan Gabriel",
-  "cliApellido": "Garcia",
+  "cliNombre": "Nombre de Prueba",
+  "cliApellido": "Apellido de Prueba",
   "usuUsername": "emaildeprueba",
   "usuEmail": "emaildeprueba@gmail.com",
-  "cliTelefono": null
+  "cliTelefono": "123456789"
 }
 ###
 GET {{BackEnd_Https}}/api/profile/direcciones
@@ -212,7 +212,7 @@ POST {{BackEnd_Https}}/api/profile/direcciones
 Content-Type: application/json
 Authorization: Bearer {{mitoken}}
 {
-  "DirCalle": "calle",
+  "DirCalle": "calle2",
   "DirDistrito": "distrito",
   "DirProvincia": "provincia",
   "DirDepartamento": "departamento",
@@ -243,3 +243,17 @@ Accept: application/json
 ###
 GET {{BackEnd_HostAddress}}/api/admin/reportes/productos/2/variantes/5
 Accept: application/json
+###
+POST {{BackEnd_Https}}/api/mis-pedidos
+Authorization: Bearer {{mitoken}}
+Content-Type: application/json
+
+{
+  "dirId": 3,
+  "NumeroYape": "987654321",
+  "CodigoAprobacion": "123456",
+  "Items": [
+    { "VarId": 5, "Cantidad": 2 },
+    { "VarId": 12, "Cantidad": 1 }
+  ]
+}

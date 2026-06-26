@@ -2,6 +2,7 @@
 {
     public class DireccionesDTO
     {
+        public int DirId { get; set; } //para reusar para los pedidos
         public string DirCalle { get; set; } = string.Empty;
         public string DirDistrito { get; set; } = string.Empty;
         public string DirProvincia { get; set; } = string.Empty;
