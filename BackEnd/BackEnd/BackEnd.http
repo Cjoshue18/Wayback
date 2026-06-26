@@ -236,3 +236,10 @@ Authorization: Bearer {{mitoken}}
 DELETE {{BackEnd_Https}}/api/profile/direcciones/1
 Content-Type: application/json
 Authorization: Bearer {{mitoken}}
+
+###
+GET {{BackEnd_HostAddress}}/api/admin/reportes/productos/2/variantes
+Accept: application/json
+###
+GET {{BackEnd_HostAddress}}/api/admin/reportes/productos/2/variantes/5
+Accept: application/json

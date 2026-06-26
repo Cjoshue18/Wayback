@@ -40,8 +40,8 @@ namespace BackEnd.Controllers.Public
                         VarId = v.VarId,
                         ColorNombre = v.VarColor.ColorNombre,
                         ColorHex = v.VarColor.ColorHex,
-                        Talla = v.VarTalla,
-                        Stock = v.VarStock
+                        VarTalla = v.VarTalla,
+                        VarStock = v.VarStock
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
