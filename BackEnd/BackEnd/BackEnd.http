@@ -1,6 +1,7 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyNDM2NDExLCJleHAiOjE3ODMwNDEyMTEsImlhdCI6MTc4MjQzNjQxMSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.bahFaDb422AmgAJ23piO0SXOz_s5e89KRHTyqd306Q4
+@mitoken = ""
+@admintoken = ""
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -269,3 +270,26 @@ Accept: application/json
 GET {{BackEnd_Https}}/api/mis-pedidos/1
 Authorization: Bearer {{mitoken}}
 Accept: application/json
+
+###
+
+# Obtener todos los pedidos (resumen con datos del cliente)
+GET {{BackEnd_HostAddress}}/api/admin/reportes/pedidos
+Authorization: Bearer {{admintoken}}
+Accept: application/json
+
+###
+# Obtener el detalle de un pedido específico
+GET {{BackEnd_HostAddress}}/api/admin/reportes/pedidos/2
+Authorization: Bearer {{admintoken}}
+Accept: application/json
+
+###
+# Cambiar el estado de un pedido (pendiente, aceptado, rechazado, cancelado, entregado)
+PUT {{BackEnd_HostAddress}}/api/admin/reportes/pedidos/2/estado
+Authorization: Bearer {{admintoken}}
+Content-Type: application/json
+
+{
+  "PedEstado": "aceptado"
+}
