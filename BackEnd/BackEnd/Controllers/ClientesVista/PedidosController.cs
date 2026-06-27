@@ -12,11 +12,11 @@ namespace BackEnd.Controllers.ClientesVista
     [Route("api/mis-pedidos")]
     [ApiController]
     [Authorize]
-    public class CrearPedidoController : ControllerBase
+    public class PedidosController : ControllerBase
     {
         private readonly WaybackContext _context;
 
-        public CrearPedidoController(WaybackContext context)
+        public PedidosController(WaybackContext context)
         {
             _context = context;
         }
@@ -116,6 +116,80 @@ namespace BackEnd.Controllers.ClientesVista
                 return StatusCode(500, new {mensaje = "Error al registrar pedido.", detalle = ex.Message});
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> ObtenerPedidos()
+        {
+            var usuId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(c => c.UsuId == usuId);
+
+            if (cliente == null) return NotFound();
+
+            var pedidos = await _context.Pedidos
+                .Where(p => p.CliId == cliente.CliId)
+                .OrderByDescending(p => p.PedFechaCompra)
+                .Select(p => new PedidoResumenDTO
+                {
+                    PedId = p.PedId,
+                    PedEstado = p.PedEstado,
+                    PedTotal = p.PedTotal,
+                    PedFechaCompra = p.PedFechaCompra,
+                    PedFechaEntrega = p.PedFechaEntrega,
+                    PedMetTipoPago = p.PedMetTipoPago,
+                    PedDirCalle = p.PedDirCalle,
+                    PedDirDistrito = p.PedDirDistrito,
+                    PedDirProvincia = p.PedDirProvincia,
+                    PedDirDepartamento = p.PedDirDepartamento
+                })
+                .ToListAsync();
+
+            return Ok(pedidos);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObtenerPedidoDetalle(int id)
+        {
+            var usuId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(c => c.UsuId == usuId);
+
+            if (cliente == null) return NotFound();
+
+            var pedido = await _context.Pedidos
+                .Where(p => p.PedId == id && p.CliId == cliente.CliId)
+                .Select(p => new PedidoDetalleDTO
+                {
+                    PedId = p.PedId,
+                    PedEstado = p.PedEstado,
+                    PedTotal = p.PedTotal,
+                    PedFechaCompra = p.PedFechaCompra,
+                    PedFechaEntrega = p.PedFechaEntrega,
+                    PedMetTipoPago = p.PedMetTipoPago,
+                    PedMetUltimos4 = p.PedMetUltimos4,
+                    PedDirCalle = p.PedDirCalle,
+                    PedDirDistrito = p.PedDirDistrito,
+                    PedDirProvincia = p.PedDirProvincia,
+                    PedDirDepartamento = p.PedDirDepartamento,
+                    PedDirReferencia = p.PedDirReferencia,
+                    Detalles = p.Detalles.Select(d => new PedidoDetalleItemDTO
+                    {
+                        VarId = d.VarId,
+                        DetPedCantidad = d.DetPedCantidad,
+                        DetPedPrecioUnitario = d.DetPedPrecioUnitario,
+                        DetPedSubTotal = d.DetPedSubTotal,
+                        ProNombre = d.Variante.Producto.ProNombre,
+                        VarTalla = d.Variante.VarTalla,
+                        ColorNombre = d.Variante.VarColor.ColorNombre,
+                        ImgURL = d.Variante.Imagen != null ? d.Variante.Imagen.ImgURL : null
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (pedido == null) return NotFound("Pedido no encontrado.");
+
+            return Ok(pedido);
+        }
     }
 }

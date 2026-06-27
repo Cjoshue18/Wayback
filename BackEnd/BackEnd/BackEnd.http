@@ -257,3 +257,15 @@ Content-Type: application/json
     { "VarId": 12, "Cantidad": 1 }
   ]
 }
+
+###
+# Obtener todos los pedidos del cliente autenticado
+GET {{BackEnd_Https}}/api/mis-pedidos
+Authorization: Bearer {{mitoken}}
+Accept: application/json
+
+###
+# Obtener el detalle de un pedido específico del cliente
+GET {{BackEnd_Https}}/api/mis-pedidos/1
+Authorization: Bearer {{mitoken}}
+Accept: application/json
