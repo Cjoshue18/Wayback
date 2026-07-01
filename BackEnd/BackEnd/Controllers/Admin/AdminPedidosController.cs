@@ -95,7 +95,42 @@ namespace BackEnd.Controllers.Admin
             return Ok(pedido);
         }
 
-        // 3. Editar el estado del pedido
+        // 3. Editar la fecha de entrega del pedido
+        [HttpPut("{id:int}/fecha-entrega")]
+        public async Task<IActionResult> EditarFechaEntregaPedido(int id, [FromBody] AdminUpdateFechaEntregaDTO dto)
+        {
+            var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.PedId == id);
+
+            if (pedido == null)
+            {
+                return NotFound($"El pedido con id: {id} no existe.");
+            }
+
+            // Solo se puede asignar fecha de entrega si el pedido está aceptado
+            if (dto.PedFechaEntrega.HasValue && pedido.PedEstado.ToLower() != "aceptado")
+            {
+                return Conflict(new { mensaje = $"Solo se puede asignar una fecha de entrega a pedidos en estado 'aceptado'. Estado actual: '{pedido.PedEstado}'." });
+            }
+
+            if (dto.PedFechaEntrega.HasValue && dto.PedFechaEntrega.Value < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                return BadRequest(new { mensaje = "La fecha de entrega no puede ser una fecha pasada." });
+            }
+
+            pedido.PedFechaEntrega = dto.PedFechaEntrega;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                PedId = pedido.PedId,
+                PedEstado = pedido.PedEstado,
+                PedFechaEntrega = pedido.PedFechaEntrega,
+                mensaje = "Fecha de entrega actualizada correctamente."
+            });
+        }
+
+        // 4. Editar el estado del pedido
         [HttpPut("{id:int}/estado")]
         public async Task<IActionResult> EditarEstadoPedido(int id, [FromBody] AdminUpdatePedidoEstadoDTO dto)
         {
