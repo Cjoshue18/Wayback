@@ -1,7 +1,7 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyOTM2NDI1LCJleHAiOjE3ODM1NDEyMjUsImlhdCI6MTc4MjkzNjQyNSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.7bZic3veQy8GJBheSfKamOzlv5mYAbzMbYsbZs3loKU
-@admintoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1IiwidW5pcXVlX25hbWUiOiJhZG1pbjEyMyIsImVtYWlsIjoiYWRtaW5wcnVlYmFAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwibmJmIjoxNzgyOTM2NDY4LCJleHAiOjE3ODM1NDEyNjgsImlhdCI6MTc4MjkzNjQ2OCwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.x9y7WQ-FdfhDHgzRqDT_iqZqrV-wGq67LmAVcnr_p00
+@mitoken = <pega aquí el token del cliente obtenido en el login>
+@admintoken = <pega aquí el token del admin obtenido en el login>
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -294,3 +294,16 @@ Content-Type: application/json
 {
   "PedEstado": "aceptado"
 }
+
+###
+# Asignar (o actualizar) la fecha de entrega estimada
+# Requiere: pedido en estado "aceptado"
+# La fecha no puede ser una fecha pasada
+PUT {{BackEnd_HostAddress}}/api/admin/reportes/pedidos/2/fecha-entrega
+Authorization: Bearer {{admintoken}}
+Content-Type: application/json
+
+{
+  "PedFechaEntrega": "2026-07-15"
+}
+###
