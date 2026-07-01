@@ -32,6 +32,7 @@ namespace BackEnd.Controllers.ClientesVista
                                                 //Asi solo llega [dircalle, dirdistrito, etc]
                 .Select(d => new DireccionesDTO //siempre va a devolver varios clientes asi quede 1 y hara lista de listas, asi que selectMany es necesario
                 {
+                    DirId = d.DirId,
                     DirCalle = d.DirCalle,
                     DirDistrito = d.DirDistrito,
                     DirProvincia = d.DirProvincia,

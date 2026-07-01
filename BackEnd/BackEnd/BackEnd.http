@@ -1,7 +1,7 @@
 @BackEnd_HostAddress = http://localhost:5089
 @BackEnd_Https = https://localhost:7065
-@mitoken = ""
-@admintoken = ""
+@mitoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJlbWFpbGRlcHJ1ZWJhIiwiZW1haWwiOiJlbWFpbGRlcHJ1ZWJhQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnRlIiwibmJmIjoxNzgyOTM2NDI1LCJleHAiOjE3ODM1NDEyMjUsImlhdCI6MTc4MjkzNjQyNSwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.7bZic3veQy8GJBheSfKamOzlv5mYAbzMbYsbZs3loKU
+@admintoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1IiwidW5pcXVlX25hbWUiOiJhZG1pbjEyMyIsImVtYWlsIjoiYWRtaW5wcnVlYmFAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwibmJmIjoxNzgyOTM2NDY4LCJleHAiOjE3ODM1NDEyNjgsImlhdCI6MTc4MjkzNjQ2OCwiaXNzIjoiV2F5YmFja0JhY2tFbmQiLCJhdWQiOiJXYXliYWNrRnJvbnRFbmQifQ.x9y7WQ-FdfhDHgzRqDT_iqZqrV-wGq67LmAVcnr_p00
 
 GET {{BackEnd_Https}}/api/admin/reportes/clientes
 Accept: application/json
@@ -54,6 +54,7 @@ Content-Type: application/json
 
 POST {{BackEnd_HostAddress}}/api/auth/register/secure/admin
 Content-Type: application/json
+Authorization: ""
 {
   "Email": "adminprueba@gmail.com",
   "NombreUsuario": "admin123",
@@ -213,20 +214,20 @@ POST {{BackEnd_Https}}/api/profile/direcciones
 Content-Type: application/json
 Authorization: Bearer {{mitoken}}
 {
-  "DirCalle": "calle2",
-  "DirDistrito": "distrito",
-  "DirProvincia": "provincia",
-  "DirDepartamento": "departamento",
-  "DirReferencia": "referencia",
+  "DirCalle": "calle3",
+  "DirDistrito": "Santiago",
+  "DirProvincia": "Bogota",
+  "DirDepartamento": "Brasil",
+  "DirReferencia": "Al costado del mercadito",
   "DirPreferido": true
 }
 ###
   
-PUT {{BackEnd_Https}}/api/profile/direcciones/1
+PUT {{BackEnd_Https}}/api/profile/direcciones/3
 Content-Type: application/json
 Authorization: Bearer {{mitoken}}
 {
-  "DirCalle": "calle2",
+  "DirCalle": "calle2202020",
   "DirDistrito": "distrito",
   "DirProvincia": "provincia",
   "DirDepartamento": "departamento",
