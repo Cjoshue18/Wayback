@@ -237,5 +237,36 @@ namespace BackEnd.Controllers.Admin
                 return StatusCode(500, new { mensaje = "Error al actualizar el estado del pedido.", detalle = ex.Message });
             }
         }
+
+        // 5. Ingresos semanales (últimos 7 días)
+        [HttpGet("ingresos-semanales")]
+        public async Task<ActionResult<IEnumerable<AdminIngresoDiarioDTO>>> GetIngresosSemanales()
+        {
+            var fechaInicio = DateTime.UtcNow.Date.AddDays(-6);
+            
+            var pedidos = await _context.Pedidos
+                .Where(p => p.PedEstado.ToLower() == "entregado" && p.PedFechaCompra >= fechaInicio)
+                .ToListAsync();
+
+            var ingresos = new List<AdminIngresoDiarioDTO>();
+            for (int i = 0; i < 7; i++)
+            {
+                var fecha = fechaInicio.AddDays(i);
+                var total = pedidos.Where(p => p.PedFechaCompra.Date == fecha.Date).Sum(p => p.PedTotal);
+                
+                // Nombres de dias en español
+                var dia = fecha.ToString("dddd", new System.Globalization.CultureInfo("es-ES"));
+                dia = char.ToUpper(dia[0]) + dia.Substring(1);
+
+                ingresos.Add(new AdminIngresoDiarioDTO
+                {
+                    Fecha = dia,
+                    Total = total
+                });
+            }
+
+            return Ok(ingresos);
+        }
     }
 }
+
