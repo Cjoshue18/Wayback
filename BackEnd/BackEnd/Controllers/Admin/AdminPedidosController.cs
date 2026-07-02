@@ -1,4 +1,5 @@
 using BackEnd.Data;
+using BackEnd.DTOs;
 using BackEnd.DTOs.Admin;
 using BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -25,10 +26,24 @@ namespace BackEnd.Controllers.Admin
 
         // 1. Obtener todos los pedidos (Resumen)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminPedidoResumenDTO>>> GetPedidos()
+        public async Task<ActionResult<ListaPaginada<AdminPedidoResumenDTO>>> GetPedidos([FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10)
         {
-            var pedidos = await _context.Pedidos
+            /* 
+             * NOTA EDUCATIVA SOBRE PAGINACIÓN Y ASQUERYABLE:
+             * Usamos .AsQueryable() para separar la consulta base en una variable ("query") en lugar de ejecutar todo directamente.
+             * Esto es crucial porque para paginar necesitamos hacer DOS consultas con los mismos filtros:
+             * 1. Un SELECT COUNT(*) para saber el Total de Registros (CountAsync) antes del Skip/Take.
+             * 2. Un SELECT con OFFSET/FETCH para traer los datos reales (Skip y Take).
+             * Al usar una variable "query", esta funciona como una "receta" que aún no viaja a SQL.
+             * Así evitamos repetir los mismos .Where() dos veces y prevenimos errores al modificar filtros en el futuro.
+             */
+            var query = _context.Pedidos.AsQueryable();
+            var totalRegistros = await query.CountAsync();
+
+            var pedidos = await query
                 .OrderByDescending(p => p.PedFechaCompra)
+                .Skip((pagina - 1) * registrosPorPagina)
+                .Take(registrosPorPagina)
                 .Select(p => new AdminPedidoResumenDTO
                 {
                     PedId = p.PedId,
@@ -47,7 +62,15 @@ namespace BackEnd.Controllers.Admin
                 })
                 .ToListAsync();
 
-            return Ok(pedidos);
+            var result = new ListaPaginada<AdminPedidoResumenDTO>
+            {
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                RegistrosPorPagina = registrosPorPagina,
+                Elementos = pedidos
+            };
+
+            return Ok(result);
         }
 
         // 2. Obtener el detalle de un pedido específico
@@ -238,7 +261,7 @@ namespace BackEnd.Controllers.Admin
             }
         }
 
-        // 5. Ingresos semanales (últimos 7 días)
+        //Ingresos semanales (últimos 7 días)
         [HttpGet("ingresos-semanales")]
         public async Task<ActionResult<IEnumerable<AdminIngresoDiarioDTO>>> GetIngresosSemanales()
         {

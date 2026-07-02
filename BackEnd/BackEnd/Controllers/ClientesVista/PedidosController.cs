@@ -1,4 +1,5 @@
-﻿using BackEnd.Data;
+using BackEnd.Data;
+using BackEnd.DTOs;
 using BackEnd.DTOs.ClientesVista;
 using BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -117,7 +118,7 @@ namespace BackEnd.Controllers.ClientesVista
             }
         }
         [HttpGet]
-        public async Task<IActionResult> ObtenerPedidos()
+        public async Task<ActionResult<ListaPaginada<PedidoResumenDTO>>> ObtenerPedidos([FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10)
         {
             var usuId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -126,9 +127,13 @@ namespace BackEnd.Controllers.ClientesVista
 
             if (cliente == null) return NotFound();
 
-            var pedidos = await _context.Pedidos
-                .Where(p => p.CliId == cliente.CliId)
+            var query = _context.Pedidos.Where(p => p.CliId == cliente.CliId);
+            var totalRegistros = await query.CountAsync();
+
+            var pedidos = await query
                 .OrderByDescending(p => p.PedFechaCompra)
+                .Skip((pagina - 1) * registrosPorPagina)
+                .Take(registrosPorPagina)
                 .Select(p => new PedidoResumenDTO
                 {
                     PedId = p.PedId,
@@ -144,7 +149,15 @@ namespace BackEnd.Controllers.ClientesVista
                 })
                 .ToListAsync();
 
-            return Ok(pedidos);
+            var result = new ListaPaginada<PedidoResumenDTO>
+            {
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                RegistrosPorPagina = registrosPorPagina,
+                Elementos = pedidos
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

@@ -1,4 +1,5 @@
-﻿using BackEnd.Data;
+using BackEnd.Data;
+using BackEnd.DTOs;
 using BackEnd.DTOs.Admin;
 using BackEnd.DTOs.ClientesVista;
 using BackEnd.Models;
@@ -20,12 +21,16 @@ namespace BackEnd.Controllers.Admin
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminGetClientesDTO>>> GetClientes()
+        [HttpGet] //DTO para evitar referencia circular
+        public async Task<ActionResult<ListaPaginada<AdminGetClientesDTO>>> GetClientes([FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10)
         {
-            //Lo convierto en JSON usando usando las DTO para evitar referencia circular
-            var dto = await _context.Clientes
+            var query = _context.Clientes.AsQueryable();
+            var totalRegistros = await query.CountAsync();
+
+            var clientes = await query
                 .OrderBy(c => c.CliId)
+                .Skip((pagina - 1) * registrosPorPagina)
+                .Take(registrosPorPagina)
                 .Select(c => new AdminGetClientesDTO
             {
                 CliId = c.CliId,
@@ -41,14 +46,17 @@ namespace BackEnd.Controllers.Admin
                     UsuEmail = c.Usuario.UsuEmail,
                     UsuFechaRegistro = c.Usuario.UsuFechaRegistro
                 }
-            }).ToListAsync(); //lo convierto en lista al ser muchos registros
+            }).ToListAsync();
 
-            if (!dto.Any())
+            var result = new ListaPaginada<AdminGetClientesDTO>
             {
-                return Ok(new List<AdminGetClientesDTO>());
-            }
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                RegistrosPorPagina = registrosPorPagina,
+                Elementos = clientes
+            };
 
-            return Ok(dto);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

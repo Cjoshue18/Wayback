@@ -1,4 +1,5 @@
-﻿using BackEnd.Data;
+using BackEnd.Data;
+using BackEnd.DTOs;
 using BackEnd.DTOs.Admin;
 using BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +21,16 @@ namespace BackEnd.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminGetProductosDTO>>> GetListaProductos()
+        public async Task<ActionResult<ListaPaginada<AdminGetProductosDTO>>> GetListaProductos([FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10)
         {
+            var query = _context.Productos.AsQueryable();
+            var totalRegistros = await query.CountAsync();
+
             var time = DateTime.UtcNow;
-            var dto = await _context.Productos
+            var productos = await query
                 .OrderBy(p => p.ProId)
+                .Skip((pagina - 1) * registrosPorPagina)
+                .Take(registrosPorPagina)
                 .Select(p => new AdminGetProductosDTO
                 {
                     ProId = p.ProId,
@@ -41,11 +47,15 @@ namespace BackEnd.Controllers.Admin
 
                 }).ToListAsync();
 
-            if (!dto.Any())
+            var result = new ListaPaginada<AdminGetProductosDTO>
             {
-                return Ok(new List<AdminGetProductosDTO>());
-            }
-            return Ok(dto);
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                RegistrosPorPagina = registrosPorPagina,
+                Elementos = productos
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]

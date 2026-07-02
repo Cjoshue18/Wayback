@@ -1,4 +1,5 @@
 using BackEnd.Data;
+using BackEnd.DTOs;
 using BackEnd.DTOs.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -127,9 +128,11 @@ namespace BackEnd.Controllers.Public
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] List<int>? Categoria,
-            [FromQuery] List<int>? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
-            [FromQuery] List<int>? color, [FromQuery] List<string>? talla, [FromQuery] bool? stock) 
+        public async Task<ActionResult<ListaPaginada<ProductoTarjetaDTO>>> GetProductoFilter(
+            [FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10,
+            [FromQuery] List<int>? Categoria = null,
+            [FromQuery] List<int>? Estilo = null, [FromQuery] string? genero = null, [FromQuery] decimal? PrecioMin = null, [FromQuery] decimal? PrecioMax = null,
+            [FromQuery] List<int>? color = null, [FromQuery] List<string>? talla = null, [FromQuery] bool? stock = null) 
             //usamos filtros para poder filtrar por mas filtros del mismo tipo
         {
             var query = _context.Productos.AsQueryable();
@@ -175,7 +178,13 @@ namespace BackEnd.Controllers.Public
             {
                 query = query.Where(p => p.Variantes.Any(v => v.VarStock > 0));
             }
+
+            var totalRegistros = await query.CountAsync();
+
             var productos = await query
+                .OrderBy(p => p.ProId)
+                .Skip((pagina - 1) * registrosPorPagina)
+                .Take(registrosPorPagina)
                 .Select(p => new ProductoTarjetaDTO
                 {
                     ProId = p.ProId,
@@ -201,8 +210,17 @@ namespace BackEnd.Controllers.Public
                         .ToList()
 
                 }).ToListAsync();
+
+            var result = new ListaPaginada<ProductoTarjetaDTO>
+            {
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                RegistrosPorPagina = registrosPorPagina,
+                Elementos = productos
+            };
+
             //a pesar de que pueda no cargar los productos nunca deberia devolver un 404, solo una lista vacia
-            return Ok(productos);
+            return Ok(result);
         }
     }
 }
