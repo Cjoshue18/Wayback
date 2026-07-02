@@ -1,4 +1,4 @@
-﻿using BackEnd.Data;
+using BackEnd.Data;
 using BackEnd.DTOs.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -129,7 +129,7 @@ namespace BackEnd.Controllers.Public
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductoFilter([FromQuery] List<int>? Categoria,
             [FromQuery] List<int>? Estilo, [FromQuery] string? genero, [FromQuery] decimal? PrecioMin, [FromQuery] decimal? PrecioMax,
-            [FromQuery] List<string>? color, [FromQuery] List<string>? talla, [FromQuery] bool? stock) 
+            [FromQuery] List<int>? color, [FromQuery] List<string>? talla, [FromQuery] bool? stock) 
             //usamos filtros para poder filtrar por mas filtros del mismo tipo
         {
             var query = _context.Productos.AsQueryable();
@@ -167,8 +167,8 @@ namespace BackEnd.Controllers.Public
                              //El select en talla solo es para volverlo a lower
             }
             if (color != null && color.Any())
-            { //aplica lo mismo que para talla
-                query = query.Where(p => p.Variantes.Any(v => color.Select(c => c.ToLower()).Contains(v.VarColor.ColorNombre.ToLower())));
+            {
+                query = query.Where(p => p.Variantes.Any(v => color.Contains(v.VarColor.ColorId)));
             }
 
             if (stock == true)
