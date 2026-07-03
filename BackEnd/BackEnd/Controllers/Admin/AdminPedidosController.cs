@@ -29,13 +29,12 @@ namespace BackEnd.Controllers.Admin
         public async Task<ActionResult<ListaPaginada<AdminPedidoResumenDTO>>> GetPedidos([FromQuery] int pagina = 1, [FromQuery] int registrosPorPagina = 10)
         {
             /* 
-             * NOTA EDUCATIVA SOBRE PAGINACIÓN Y ASQUERYABLE:
-             * Usamos .AsQueryable() para separar la consulta base en una variable ("query") en lugar de ejecutar todo directamente.
-             * Esto es crucial porque para paginar necesitamos hacer DOS consultas con los mismos filtros:
-             * 1. Un SELECT COUNT(*) para saber el Total de Registros (CountAsync) antes del Skip/Take.
-             * 2. Un SELECT con OFFSET/FETCH para traer los datos reales (Skip y Take).
-             * Al usar una variable "query", esta funciona como una "receta" que aún no viaja a SQL.
-             * Así evitamos repetir los mismos .Where() dos veces y prevenimos errores al modificar filtros en el futuro.
+             * Usamos .AsQueryable() para separar la consulta base en una variable ("query") en lugar de ejecutar todo directamente
+             Esto es crucial porque para paginar necesitamos hacer DOS consultas con los mismos filtros:
+             1. Un SELECT COUNT(*) para saber el Total de Registros (CountAsync) antes del Skip/Take
+             2. Un SELECT con OFFSET/FETCH para traer los datos reales (Skip y Take)
+             Al usar una variable "query", esta funciona como una "receta" que aún no viaja a SQL
+            Así evitamos repetir los mismos .Where() dos veces y prevenimos errores al modificar filtros en el futuro
              */
             var query = _context.Pedidos.AsQueryable();
             var totalRegistros = await query.CountAsync();

@@ -31,9 +31,6 @@ namespace BackEnd.Controllers.Public
                     ProPrecio = p.ProPrecio,
                     ProDescuentoInicio = p.ProDescuentoInicio,
                     ProDescuentoFin = p.ProDescuentoFin,
-                    ImagenesUrl = p.Imagenes
-                        .Select(i => i.ImgURL)
-                        .ToList(),
                     Categoria = p.Categoria.CatNombre,
                     Estilo = p.Estilo != null ? p.Estilo.EstNombre : null,
                     Variantes = p.Variantes.Select(v => new VariantesDetalleDTO
@@ -42,7 +39,8 @@ namespace BackEnd.Controllers.Public
                         ColorNombre = v.VarColor.ColorNombre,
                         ColorHex = v.VarColor.ColorHex,
                         VarTalla = v.VarTalla,
-                        VarStock = v.VarStock
+                        VarStock = v.VarStock,
+                        VarImgUrl = v.Imagen != null ? v.Imagen.ImgURL : null
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
@@ -51,81 +49,6 @@ namespace BackEnd.Controllers.Public
             return Ok(dto);
         }
 
-        [HttpGet("categoria={id:int}")]
-        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductosByCategoriaID(int id)
-        {
-            var dto = await _context.Productos
-                .Where(p => p.CatId == id)
-                .OrderBy(p => p.ProId)
-                .Select(p => new ProductoTarjetaDTO
-                {
-                    ProId = p.ProId,
-                    ProNombre = p.ProNombre,
-                    ProPrecio = p.ProPrecio,
-                    ProDescuento = p.ProDescuento,
-                    ProDescuentoInicio = p.ProDescuentoInicio,
-                    ProDescuentoFin = p.ProDescuentoFin,
-                    ImagenesUrl = p.Imagenes
-                        .Select(v => v.ImgURL)
-                        .ToList(),
-                    Categoria = p.Categoria.CatNombre,
-                    Estilo = p.Estilo != null ? p.Estilo.EstNombre : null,
-                    Colores = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarColor.ColorHex)
-                        .Distinct()
-                        .ToList(),
-                    Tallas = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarTalla)
-                        .Distinct()
-                        .ToList()
-                })
-                .ToListAsync();
-            if (!dto.Any())
-            {
-                return Ok(new List<ProductoTarjetaDTO>());
-            }
-            return Ok(dto);
-        }
-
-        [HttpGet("estilo={id:int}")]
-        public async Task<ActionResult<IEnumerable<ProductoTarjetaDTO>>> GetProductosByEstiloID(int id)
-        {
-            var dto = await _context.Productos
-                .Where(p => p.EstId == id)
-                .OrderBy(p => p.ProId)
-                .Select(p => new ProductoTarjetaDTO
-                {
-                    ProId = p.ProId,
-                    ProNombre = p.ProNombre,
-                    ProPrecio = p.ProPrecio,
-                    ProDescuento = p.ProDescuento,
-                    ProDescuentoInicio = p.ProDescuentoInicio,
-                    ProDescuentoFin = p.ProDescuentoFin,
-                    ImagenesUrl = p.Imagenes
-                        .Select(v => v.ImgURL)
-                        .ToList(),
-                    Categoria = p.Categoria.CatNombre,
-                    Estilo = p.Estilo!.EstNombre, //como estoy buscando por estilo, no será nulo
-                    Colores = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarColor.ColorHex)
-                        .Distinct()
-                        .ToList(),
-                    Tallas = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarTalla)
-                        .Distinct()
-                        .ToList()
-                })
-                .ToListAsync();
-            if (!dto.Any())
-            {
-                return Ok(new List<ProductoTarjetaDTO>());
-            }
-            return Ok(dto);
-        }
 
         [HttpGet]
         public async Task<ActionResult<ListaPaginada<ProductoTarjetaDTO>>> GetProductoFilter(
@@ -193,20 +116,18 @@ namespace BackEnd.Controllers.Public
                     ProDescuento = p.ProDescuento,
                     ProDescuentoInicio = p.ProDescuentoInicio,
                     ProDescuentoFin = p.ProDescuentoFin,
-                    ImagenesUrl = p.Imagenes
-                        .Select(v => v.ImgURL)
-                        .ToList(),
                     Categoria = p.Categoria.CatNombre,
                     Estilo = p.Estilo!= null ? p.Estilo.EstNombre : null, //como estoy buscando por estilo, no será nulo
                     Colores = p.Variantes
                         .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarColor.ColorHex)
-                        .Distinct()
-                        .ToList(),
-                    Tallas = p.Variantes
-                        .Where(v => v.VarStock > 0)
-                        .Select(v => v.VarTalla)
-                        .Distinct()
+                        .GroupBy(v => v.VarColor.ColorHex) //Agrupamos porque variantes (S, M, L, etc.) se refieren a un color
+                        .Select(g => new ColorTarjetaDTO //como se agrupo con Group By ahora tiene propiedad .key que es la columna que se uso para agrupar, y todas las propiedades de la clase ColorTarjetaDTO
+                        { 
+                            ColorHex = g.Key, //es el colorhex, columna con la cual se agrupo
+                            ImgUrl = g.Where(v => v.Imagen != null) //Nos aseguramos de que nos de una imagen no nula
+                                        .Select(v => v.Imagen.ImgURL).FirstOrDefault() //como son varias variantes en el grupo, solo queremos el primer color
+                        }) //como es primero o por defecto, te da una imagen y si no el defecto de un string es un null
+                        .Take(5)
                         .ToList()
 
                 }).ToListAsync();

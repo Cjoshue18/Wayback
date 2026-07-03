@@ -1,4 +1,4 @@
-﻿namespace BackEnd.DTOs.Public
+namespace BackEnd.DTOs.Public
 {
     public class VariantesDetalleDTO
     {
@@ -7,5 +7,6 @@
         public string ColorNombre { get; set; } = string.Empty;
         public string ColorHex { get; set; } = string.Empty;
         public int VarStock { get; set; }
+        public string? VarImgUrl { get; set; }
     }
 }
