@@ -41,7 +41,7 @@ RESTful API backend for the Wayback e-commerce platform, specializing in Y2K and
 
 The PostgreSQL database schema is highly normalized and managed via Entity Framework Core (Code-First). 
 
-👉 **[View the full Database Schema and ER Diagram here](./DATABASE.md)**
+**[View the full Database Schema and ER Diagram here](./DATABASE.md)**
 
 ## Project Architecture
 
