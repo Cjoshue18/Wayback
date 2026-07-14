@@ -1,6 +1,6 @@
 # Wayback Database Architecture
 
-The PostgreSQL database for the Wayback platform is managed via the **Entity Framework Core Code-First** approach. The schema is highly normalized to ensure data integrity and is logically divided into four distinct domains.
+The PostgreSQL database for the Wayback platform is managed via the **Entity Framework Core Database-First** approach. The schema is highly normalized to ensure data integrity and is logically divided into four distinct domains.
 
 ## Entity-Relationship Schema
 
